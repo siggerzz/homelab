@@ -36,7 +36,7 @@ spec:
     server:
       ingress:
         enabled: true
-        ingressClassName: internal
+        ingressClassName: external
         hosts:
           - &host "auth.${SECRET_DOMAIN}"
         tls:

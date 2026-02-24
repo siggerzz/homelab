@@ -167,7 +167,7 @@ spec:
             port: *httpPort
     ingress:
       app:
-        className: internal
+        className: external
         annotations:
           gethomepage.dev/enabled: "true"
           gethomepage.dev/icon: bookstack
