@@ -62,7 +62,7 @@ spec:
       - --ignore-ingress-tls-spec
     policy: sync
     sources: ["ingress", "service"]
-    txtPrefix: k8s.
+    txtPrefix: k8s-unifi.
     txtOwnerId: unifi
     domainFilters: ["${SECRET_DOMAIN}"]
     serviceMonitor:
