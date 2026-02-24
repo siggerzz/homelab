@@ -169,6 +169,7 @@ spec:
       app:
         className: external
         annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           gethomepage.dev/enabled: "true"
           gethomepage.dev/icon: bookstack
           gethomepage.dev/name: BookLore
