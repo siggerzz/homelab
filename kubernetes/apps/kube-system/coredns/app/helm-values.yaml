@@ -9,6 +9,20 @@ service:
 replicaCount: 2
 servers:
   - zones:
+      - zone: ${SECRET_DOMAIN}.
+        scheme: dns://
+    port: 53
+    plugins:
+      - name: errors
+      - name: log
+        configBlock: |-
+          class error
+      - name: forward
+        parameters: . 192.168.1.23
+      - name: cache
+        parameters: 30
+      - name: reload
+  - zones:
       - zone: .
         scheme: dns://
         use_tcp: true
@@ -24,10 +38,6 @@ servers:
           class error
       - name: prometheus
         parameters: 0.0.0.0:9153
-      - name: hosts
-        configBlock: |-
-          192.168.1.20 auth.${SECRET_DOMAIN}
-          fallthrough
       - name: kubernetes
         parameters: cluster.local in-addr.arpa ip6.arpa
         configBlock: |-
