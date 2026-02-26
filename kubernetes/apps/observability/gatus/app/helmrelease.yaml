@@ -79,6 +79,7 @@ spec:
         statefulset:
           volumeClaimTemplates:
             - name: data
+              storageClass: openebs-hostpath
               accessMode: ReadWriteOnce
               size: 1Gi
               globalMounts:
