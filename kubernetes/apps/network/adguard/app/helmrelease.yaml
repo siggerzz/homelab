@@ -80,6 +80,14 @@ spec:
       app:
         className: internal
         annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |
+            ui:
+              hide-url: true
+              hide-hostname: true
+            conditions:
+              - "[STATUS] == 200"
+            interval: 5m
           gethomepage.dev/enabled: "true"
           gethomepage.dev/icon: adguard-home
           gethomepage.dev/name: AdGuard Home
@@ -89,7 +97,7 @@ spec:
           gethomepage.dev/widget.username: '{{ "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}" }}'
           gethomepage.dev/widget.password: '{{ "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}" }}'
         hosts:
-          - host: &host "adguard.${SECRET_DOMAIN}"
+          - host: "adguard.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:

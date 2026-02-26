@@ -1,0 +1,45 @@
+---
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+
+storage:
+  type: sqlite
+  caching: true
+  path: /config/data.db
+
+ui:
+  title: Status | siggerzz.io
+  header: Status
+
+endpoints:
+  - name: Cloudflare
+    group: Connectivity
+    url: icmp://1.1.1.1
+    interval: 1m
+    ui:
+      hide-url: true
+      hide-hostname: true
+    conditions:
+      - "[CONNECTED] == true"
+
+  - name: Google
+    group: Connectivity
+    url: icmp://8.8.8.8
+    interval: 1m
+    ui:
+      hide-url: true
+      hide-hostname: true
+    conditions:
+      - "[CONNECTED] == true"
+
+  - name: Flux Operator
+    group: Infrastructure
+    url: "http://flux-operator.flux-system.svc.cluster.local:8080/healthz"
+    interval: 5m
+    ui:
+      hide-url: true
+      hide-hostname: true
+    conditions:
+      - "[STATUS] == 200"

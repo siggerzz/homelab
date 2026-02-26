@@ -82,6 +82,14 @@ spec:
       app:
         className: internal
         annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |
+            ui:
+              hide-url: true
+              hide-hostname: true
+            conditions:
+              - "[STATUS] == 200"
+            interval: 5m
           traefik.ingress.kubernetes.io/router.middlewares: security-authentik@kubernetescrd
           gethomepage.dev/enabled: "true"
           gethomepage.dev/icon: sonarr
@@ -91,7 +99,7 @@ spec:
           gethomepage.dev/widget.url: http://sonarr.media.svc.cluster.local:80
           gethomepage.dev/widget.key: '{{ "{{HOMEPAGE_VAR_SONARR_API_KEY}}" }}'
         hosts:
-          - host: &host "sonarr.${SECRET_DOMAIN}"
+          - host: "sonarr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:

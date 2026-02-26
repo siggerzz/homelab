@@ -92,6 +92,15 @@ spec:
     ingress:
       app:
         className: internal
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |
+            ui:
+              hide-url: true
+              hide-hostname: true
+            conditions:
+              - "[STATUS] == 200"
+            interval: 5m
         hosts:
           - host: "zigbee.${SECRET_DOMAIN}"
             paths:

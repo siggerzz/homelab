@@ -85,8 +85,17 @@ spec:
       app:
         enabled: true
         className: internal
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |
+            ui:
+              hide-url: true
+              hide-hostname: true
+            conditions:
+              - "[STATUS] == 200"
+            interval: 5m
         hosts:
-          - host: &host "qbittorrent.${SECRET_DOMAIN}"
+          - host: "qbittorrent.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
