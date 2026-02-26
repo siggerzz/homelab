@@ -34,9 +34,9 @@ endpoints:
     conditions:
       - "[CONNECTED] == true"
 
-  - name: Flux Operator
+  - name: flux-operator
     group: Infrastructure
-    url: "http://flux-operator.flux-system.svc.cluster.local:8080/healthz"
+    url: "http://flux-operator.flux-system.svc.cluster.local:9080/healthz"
     interval: 5m
     ui:
       hide-url: true
