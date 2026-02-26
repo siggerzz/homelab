@@ -3,7 +3,7 @@
 <div align="center">
   <p><em>My home Kubernetes cluster running on Talos Linux, managed with GitOps</em></p>
 
-[![Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fstatus.siggerzz.io%2Fapi%2Fv1%2Fendpoints%2Fconnectivity_cloudflare%2Fhealth%2Fbadge.shields&style=for-the-badge&logo=statuspage&logoColor=white&label=Status)](https://status.siggerzz.io)
+[![Home Internet](https://img.shields.io/endpoint?url=https%3A%2F%2Fstatus.siggerzz.io%2Fapi%2Fv1%2Fendpoints%2Fconnectivity_cloudflare%2Fhealth%2Fbadge.shields&style=for-the-badge&logo=ubiquiti&logoColor=white&label=Home%20Internet)](https://status.siggerzz.io)
 [![Uptime](https://img.shields.io/endpoint?url=https://kromgo.siggerzz.io/cluster_uptime_days&style=for-the-badge&label=Uptime)](https://kromgo.siggerzz.io)
 [![Nodes](https://img.shields.io/endpoint?url=https://kromgo.siggerzz.io/cluster_node_count&style=for-the-badge&label=Nodes)](https://kromgo.siggerzz.io)
 [![Pods](https://img.shields.io/endpoint?url=https://kromgo.siggerzz.io/cluster_pod_count&style=for-the-badge&label=Pods)](https://kromgo.siggerzz.io)
