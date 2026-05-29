@@ -18,6 +18,9 @@ spec:
       retries: 3
   values:
 
+    image:
+      tag: main-738ec40
+
     serviceAccount:
       create: false
     ingress:
