@@ -66,6 +66,11 @@ spec:
 
     postgresql:
       enabled: true
+      image:
+        repository: bitnamilegacy/postgresql
+      volumePermissions:
+        image:
+          repository: bitnamilegacy/os-shell
       auth:
         existingSecret: component-compass-secret
         secretKeys:
