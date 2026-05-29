@@ -47,8 +47,8 @@ spec:
         name: component-compass-secret
         key: CC_TOKEN
       oidc:
-        issuerUrl: "https://auth.${SECRET_DOMAIN}/application/o/component-compass/"
-        clientId: "component-compass"
+        issuerUrl: "https://auth.${SECRET_DOMAIN}/application/o/component-compass-dev/"
+        clientId: "G56M0CU7aFQMcsR56YPXMXV4SgEI54yIOQfRxzi3"
         clientSecretRef:
           name: component-compass-secret
           key: OIDC_CLIENT_SECRET
