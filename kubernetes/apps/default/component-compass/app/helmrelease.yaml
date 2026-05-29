@@ -17,6 +17,9 @@ spec:
       strategy: rollback
       retries: 3
   values:
+
+    serviceAccount:
+      create: false
     ingress:
       enabled: true
       className: internal
