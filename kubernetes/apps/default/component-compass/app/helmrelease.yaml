@@ -17,6 +17,8 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    securityContext:
+      readOnlyRootFilesystem: false
 
     image:
       tag: main-738ec40
