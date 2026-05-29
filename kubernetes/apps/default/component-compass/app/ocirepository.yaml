@@ -1,0 +1,10 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: component-compass-chart
+spec:
+  interval: 5m
+  url: oci://ghcr.io/siggerzz/charts/web-app
+  ref:
+    semver: ">=0.1.0 <1.0.0"
