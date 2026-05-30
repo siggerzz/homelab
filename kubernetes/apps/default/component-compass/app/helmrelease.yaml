@@ -20,9 +20,6 @@ spec:
     securityContext:
       readOnlyRootFilesystem: false
 
-    image:
-      tag: main-738ec40
-
     serviceAccount:
       create: false
     ingress:
