@@ -48,13 +48,6 @@ spec:
       sessionSecretRef:
         name: component-compass-secret
         key: AUTH_SECRET
-      # bearerTokenSecretRef is template-only: the released chart (0.1.3) still `required`s
-      # its name, so this keeps the render/CI green. The CC_TOKEN secret is already gone,
-      # so the cluster must roll forward to chart 0.1.4 (which uses cliTokenSecretRef) — do
-      # NOT let the old chart restart its pod. Drop bearerTokenSecretRef once 0.1.4 is live.
-      bearerTokenSecretRef:
-        name: component-compass-secret
-        key: CC_TOKEN
       cliTokenSecretRef:
         name: component-compass-secret
         key: CLI_TOKEN_SECRET
