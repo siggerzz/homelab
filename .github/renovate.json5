@@ -84,7 +84,7 @@
     },
     {
       description: [
-        'Auto-merge safe Docker image patch and digest updates',
+        'Auto-merge safe Docker image patch, digest, and initial digest-pin updates',
       ],
       matchDatasources: [
         'docker',
@@ -92,6 +92,7 @@
       matchUpdateTypes: [
         'patch',
         'digest',
+        'pinDigest',
       ],
       automerge: true,
       automergeType: 'branch',
@@ -99,12 +100,13 @@
     },
     {
       description: [
-        'component-compass web-app: own app, deployed by tracking the main image digest (not chart releases). Pin the digest and check any time so a new main build rolls out promptly. Digest auto-merge is handled by the rule above.',
+        'component-compass web-app: own app, deployed by tracking the main image digest (not chart releases). Pin the digest and check any time so a new main build rolls out promptly; the (pin)digest auto-merge is handled by the rule above. minimumReleaseAge is 0 here: `main` is a mutable tag we build ourselves, and the global 3-day soak would perpetually reset against fresh builds and stall the deploy.',
       ],
       matchPackageNames: [
         'ghcr.io/siggerzz/component-compass-web-app',
       ],
       pinDigests: true,
+      minimumReleaseAge: '0 days',
       schedule: [
         'at any time',
       ],
