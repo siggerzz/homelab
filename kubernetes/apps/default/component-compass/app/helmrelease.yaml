@@ -24,7 +24,7 @@ spec:
     # sync with the runner each migration Job.
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main
+      tag: main@sha256:0c3444683e1c6cd9fa408fb26ae9193ffb597e66fd934eb665a2e7709a83c9be
       migratorTag: main
       pullPolicy: Always
 
