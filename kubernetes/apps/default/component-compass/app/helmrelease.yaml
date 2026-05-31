@@ -17,6 +17,17 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    # Deploy decoupled from the chart's appVersion: track the web-app image directly.
+    # Renovate digest-pins `tag` (see renovate.json5), so each new `main` build lands
+    # as a value change → rollout, independent of chart releases. The migrator is a
+    # distinct image; it rides the mutable `main` tag with Always so it re-pulls in
+    # sync with the runner each migration Job.
+    image:
+      repository: ghcr.io/siggerzz/component-compass-web-app
+      tag: main
+      migratorTag: main
+      pullPolicy: Always
+
     securityContext:
       readOnlyRootFilesystem: false
 
