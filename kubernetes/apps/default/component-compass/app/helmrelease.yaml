@@ -30,6 +30,16 @@ spec:
       migratorTag: main@sha256:f846388adda0a7dcc53cf0482c0d986f709d555ec8fdb81a8664c0882fc4119c
       pullPolicy: Always
 
+    # Chart default (512Mi limit) OOM-killed the SSR process — V8 heap died at
+    # ~254MB rendering tag/component pages over the grown dataset. Bump so the
+    # cgroup-aware Node heap has headroom.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+
     securityContext:
       readOnlyRootFilesystem: false
 
