@@ -26,7 +26,8 @@ spec:
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
       tag: main@sha256:f61403d6a9a7c0827fc158f4317d6ce7f33c9ea0596b9d96d1e91efaea03684d
-      migratorTag: main@sha256:aa949e244bd1aab024ce479b474a54d98fc217e3224edc055f8d27ec781499ca
+      # renovate: datasource=docker depName=ghcr.io/siggerzz/component-compass-web-app-migrator
+      migratorTag: main@sha256:f846388adda0a7dcc53cf0482c0d986f709d555ec8fdb81a8664c0882fc4119c
       pullPolicy: Always
 
     securityContext:
