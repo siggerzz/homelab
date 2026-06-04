@@ -27,7 +27,7 @@ spec:
       repository: ghcr.io/siggerzz/component-compass-web-app
       tag: main@sha256:7989c3fcde1dabb3e38411c0a264c1a65a0bf20e3ee0290b81b536265826e2a7
       # renovate: datasource=docker depName=ghcr.io/siggerzz/component-compass-web-app-migrator
-      migratorTag: main@sha256:f846388adda0a7dcc53cf0482c0d986f709d555ec8fdb81a8664c0882fc4119c
+      migratorTag: main@sha256:7ad474ab5d9fa63a6ed280a3d5ae9843bfa1bc2d4c4d89b30418176a2c4fdebf
       pullPolicy: Always
 
     # Chart default (512Mi limit) OOM-killed the SSR process — V8 heap died at
