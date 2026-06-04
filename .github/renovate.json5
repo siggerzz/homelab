@@ -410,5 +410,20 @@
       ],
       datasourceTemplate: '{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}',
     },
+    {
+      customType: 'regex',
+      description: [
+        'component-compass migratorTag: digest-pin in lockstep with the runner. The non-standard `migratorTag` field is invisible to the helm-values manager, and the generic YAML manager above captured `main@sha256:…` as one opaque currentValue (no currentDigest group), so the migrator digest never updated and new migrations silently never ran. This manager splits tag@digest so Renovate bumps it like any other digest-pinned image (pinDigests handled by the packageRule).',
+      ],
+      managerFilePatterns: [
+        '/component-compass/.+helmrelease\\.ya?ml$/',
+      ],
+      matchStrings: [
+        'migratorTag:\\s+(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]+)',
+      ],
+      depNameTemplate: 'ghcr.io/siggerzz/component-compass-web-app-migrator',
+      datasourceTemplate: 'docker',
+      versioningTemplate: 'docker',
+    },
   ],
 }
