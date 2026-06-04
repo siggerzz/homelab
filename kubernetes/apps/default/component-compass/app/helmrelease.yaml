@@ -25,7 +25,7 @@ spec:
     # table) silently never applied. Keep both as `main@sha256:…` digests.
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main@sha256:f61403d6a9a7c0827fc158f4317d6ce7f33c9ea0596b9d96d1e91efaea03684d
+      tag: main@sha256:7989c3fcde1dabb3e38411c0a264c1a65a0bf20e3ee0290b81b536265826e2a7
       # renovate: datasource=docker depName=ghcr.io/siggerzz/component-compass-web-app-migrator
       migratorTag: main@sha256:f846388adda0a7dcc53cf0482c0d986f709d555ec8fdb81a8664c0882fc4119c
       pullPolicy: Always
