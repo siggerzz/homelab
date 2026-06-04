@@ -28,7 +28,7 @@ spec:
       tag: main@sha256:d69f17617468916a38978de12ef869ef43b2cd93f82cea4df9fbf6cb9c13b4e1
       # migratorTag is digest-pinned by a dedicated Renovate customManager (.github/renovate.json5)
       # that splits tag@digest, so it bumps in lockstep with the runner above.
-      migratorTag: main@sha256:7ad474ab5d9fa63a6ed280a3d5ae9843bfa1bc2d4c4d89b30418176a2c4fdebf
+      migratorTag: main@sha256:d2b24ca44980009e4432117e9806381774c2d8def9203565a6191bd55cc17dcf
       pullPolicy: Always
 
     # Chart default (512Mi limit) OOM-killed the SSR process — V8 heap died at
