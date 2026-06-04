@@ -25,7 +25,7 @@ spec:
     # table) silently never applied. Keep both as `main@sha256:…` digests.
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main@sha256:7989c3fcde1dabb3e38411c0a264c1a65a0bf20e3ee0290b81b536265826e2a7
+      tag: main@sha256:d69f17617468916a38978de12ef869ef43b2cd93f82cea4df9fbf6cb9c13b4e1
       # migratorTag is digest-pinned by a dedicated Renovate customManager (.github/renovate.json5)
       # that splits tag@digest, so it bumps in lockstep with the runner above.
       migratorTag: main@sha256:7ad474ab5d9fa63a6ed280a3d5ae9843bfa1bc2d4c4d89b30418176a2c4fdebf
