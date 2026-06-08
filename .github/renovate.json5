@@ -100,14 +100,17 @@
     },
     {
       description: [
-        'component-compass web-app + migrator: our own app, deployed by tracking the main image digests (not chart releases). Pin BOTH the runner and migrator digests so they bump in lockstep — a floating migrator tag skewed against the pinned runner and ran a stale migrator, silently skipping a new migration. Check any time so a new main build rolls out promptly; the (pin)digest auto-merge is handled by the rule above. minimumReleaseAge is 0 here: `main` is a mutable tag we build ourselves, and the global 3-day soak would perpetually reset against fresh builds and stall the deploy.',
+        'component-compass web-app + migrator: our own app, deployed by tracking the main image digests (not chart releases). Pin BOTH the runner and migrator digests so they bump in lockstep — a floating migrator tag skewed against the pinned runner and ran a stale migrator, silently skipping a new migration. Check any time so a new main build rolls out promptly; the (pin)digest auto-merge is handled by the rule above. `groupName` puts the runner + migrator in ONE branch so they land as a single auto-merged commit, not two ~1-min-apart commits — closes the sub-minute window where main carried a bumped runner ahead of a still-stale migrator. minimumReleaseAge is 0 here: `main` is a mutable tag we build ourselves, and the global 3-day soak would perpetually reset against fresh builds and stall the deploy. prConcurrentLimit/branchConcurrentLimit are 0 (unlimited) so this CD path never queues behind unrelated dependency PRs: the global concurrent limit (10) was once fully held by stale major-version PRs, so a fresh main build sat rate-limited on the dashboard instead of deploying.',
       ],
       matchPackageNames: [
         'ghcr.io/siggerzz/component-compass-web-app',
         'ghcr.io/siggerzz/component-compass-web-app-migrator',
       ],
+      groupName: 'component-compass',
       pinDigests: true,
       minimumReleaseAge: '0 days',
+      prConcurrentLimit: 0,
+      branchConcurrentLimit: 0,
       schedule: [
         'at any time',
       ],
