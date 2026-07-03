@@ -35,11 +35,12 @@ spec:
         containers:
           app:
             image:
-              # Built + pushed by hand (interim, no CI). Same-tag pushes need a
-              # `kubectl rollout restart deploy/component-compass-docs` to pull.
+              # Digest-pinned (interim, no CI). A bare :latest tag won't roll
+              # reliably because nodes cache it; pin the digest and bump it after
+              # each push:
+              #   docker buildx imagetools inspect ghcr.io/siggerzz/component-compass-docs:latest
               repository: ghcr.io/siggerzz/component-compass-docs
-              tag: latest
-              pullPolicy: Always
+              tag: latest@sha256:a0dd037f0eb06583983cc86ef5744bae933f89d5593315473be8d38a3503ae04
             probes:
               liveness: &probes
                 enabled: true
