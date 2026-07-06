@@ -40,7 +40,7 @@ spec:
               # each push:
               #   docker buildx imagetools inspect ghcr.io/siggerzz/component-compass-docs:latest
               repository: ghcr.io/siggerzz/component-compass-docs
-              tag: latest@sha256:a0dd037f0eb06583983cc86ef5744bae933f89d5593315473be8d38a3503ae04
+              tag: latest@sha256:5a1a2d99c0d77097fb11a0184e8994ab29fb3412d80d8b6fded690154ffd088c
             probes:
               liveness: &probes
                 enabled: true
