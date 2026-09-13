@@ -1,0 +1,174 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: herdr
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 4.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    controllers:
+      herdr:
+        # The home PVC is ReadWriteOnce, so a rolling update would never schedule
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          annotations:
+            kubectl.kubernetes.io/default-container: app
+        initContainers:
+          download:
+            image: &image
+              repository: mcr.microsoft.com/devcontainers/base
+              tag: 2.2.1-bookworm@sha256:3aacff4130e6cf04709f9cab1d7a6d3e1cc4bff6202bc61611831a18d3755673
+            env:
+              # renovate: datasource=github-releases depName=herdrdev/herdr
+              HERDR_VERSION: v0.9.0
+              # renovate: datasource=github-releases depName=tsl0922/ttyd
+              TTYD_VERSION: 1.7.7
+              # renovate: datasource=github-releases depName=cli/cli
+              GH_VERSION: v2.100.0
+            # $${...} escapes Flux substitution so the shell sees ${...}
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -eu
+                cd /opt/herdr
+                curl -fsSLo herdr "https://github.com/herdrdev/herdr/releases/download/$${HERDR_VERSION}/herdr-linux-x86_64"
+                curl -fsSLo ttyd "https://github.com/tsl0922/ttyd/releases/download/$${TTYD_VERSION}/ttyd.x86_64"
+                gh="gh_$${GH_VERSION#v}_linux_amd64"
+                curl -fsSL "https://github.com/cli/cli/releases/download/$${GH_VERSION}/$${gh}.tar.gz" | tar -xz --strip-components=2 "$${gh}/bin/gh"
+                chmod +x herdr ttyd gh
+                # Seed herdr's config on first boot only; herdr and Settings write to it later
+                mkdir -p /home/vscode/.config/herdr
+                [ -f /home/vscode/.config/herdr/config.toml ] || printf '[theme]\nname = "vesper"\n' > /home/vscode/.config/herdr/config.toml
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 256Mi
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+        containers:
+          app:
+            image: *image
+            command: ["/opt/herdr/herdr", "server"]
+            env:
+              TZ: Europe/London
+              # ~/.local/bin is where the Claude Code installer puts claude (on the PVC)
+              PATH: /home/vscode/.local/bin:/opt/herdr:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              # git over HTTPS authenticates through gh, which reads GH_TOKEN
+              GIT_CONFIG_COUNT: "1"
+              GIT_CONFIG_KEY_0: credential.https://github.com.helper
+              GIT_CONFIG_VALUE_0: "!gh auth git-credential"
+            # GH_TOKEN; optional so the pod starts before the token exists in Infisical
+            envFrom:
+              - secretRef:
+                  name: herdr-secret
+                  optional: true
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    # `herdr status server` exits 0 even when stopped, so match its output
+                    command: ["/bin/sh", "-c", "/opt/herdr/herdr status server | grep -q 'status: running'"]
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 3
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            # Every agent and its builds run in this container. Request close to typical use
+            # so it isn't first in line for eviction; no CPU limit so builds can burst.
+            resources:
+              requests:
+                cpu: 500m
+                memory: 2Gi
+              limits:
+                memory: 6Gi
+            securityContext: *securityContext
+          ttyd:
+            image: *image
+            # A herdr client starts its own server when none is running, so only attach
+            # once the app container's server is up; otherwise agents would run here
+            command:
+              - /opt/herdr/ttyd
+              - -W
+              - -p
+              - "7681"
+              - -t
+              - titleFixed=Herdr
+              - /bin/sh
+              - -c
+              - >-
+                if /opt/herdr/herdr status server | grep -q "status: running";
+                then exec /opt/herdr/herdr;
+                else echo "herdr server is not running yet, reload this page in a few seconds"; sleep 5;
+                fi
+            env:
+              TZ: Europe/London
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+            securityContext: *securityContext
+    service:
+      app:
+        controller: herdr
+        ports:
+          http:
+            port: &port 7681
+    ingress:
+      app:
+        className: internal
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: security-authentik@kubernetescrd
+        hosts:
+          - host: herdr.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+    persistence:
+      home:
+        existingClaim: herdr-home
+        globalMounts:
+          - path: /home/vscode
+      bin:
+        type: emptyDir
+        globalMounts:
+          - path: /opt/herdr
