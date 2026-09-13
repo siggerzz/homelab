@@ -9,7 +9,7 @@ instance:
     - notification-controller
   sync:
     kind: GitRepository
-    url: "https://github.com/siggerzz/home-infra"
+    url: "ssh://git@github.com/siggerzz/homelab"
     ref: "refs/heads/main"
     path: kubernetes/flux/cluster
     pullSecret: github-deploy-key
