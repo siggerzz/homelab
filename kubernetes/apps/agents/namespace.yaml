@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.18.1-standalone-strict/namespace-v1.json
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agents
+  labels:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+    # volsync mover pods don't meet restricted (no runAsNonRoot/seccompProfile),
+    # so enforce baseline and only warn/audit on restricted
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
