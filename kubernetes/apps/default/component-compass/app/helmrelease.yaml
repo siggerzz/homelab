@@ -25,10 +25,10 @@ spec:
     # table) silently never applied. Keep both as `main@sha256:…` digests.
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main@sha256:71dfe0629b71dedfed4fa58a7c04f469f8fdaeb2201a335d6f653d680b731886
+      tag: main@sha256:c2efc526e935a80b1a8b11f7692753380f5cbaddb7eb2c36d3aa64f6e97f21cd
       # migratorTag is digest-pinned by a dedicated Renovate customManager (.github/renovate.json5)
       # that splits tag@digest, so it bumps in lockstep with the runner above.
-      migratorTag: main@sha256:a87fcc115a05926aa262c62b44a415fd39c394be13187614d61125f4cf9e7373
+      migratorTag: main@sha256:d5ef6ef068293148aaf03b7cf339758999743d2e17c302b2ea5ca5749baef1ac
       pullPolicy: Always
 
     # Chart default (512Mi limit) OOM-killed the SSR process — V8 heap died at
