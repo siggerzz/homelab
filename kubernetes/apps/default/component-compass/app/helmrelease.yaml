@@ -104,6 +104,14 @@ spec:
           adminPasswordKey: POSTGRES_PASSWORD
           userPasswordKey: POSTGRES_PASSWORD
       primary:
+        # 512Mi OOM-killed Postgres ingesting a 41MB scan artifact (one jsonb
+        # value parsed and compressed in a single INSERT).
+        resources:
+          requests:
+            cpu: 50m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
         persistence:
           storageClass: openebs-hostpath
           size: 2Gi
