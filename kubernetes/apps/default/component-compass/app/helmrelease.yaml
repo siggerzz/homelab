@@ -67,9 +67,6 @@ spec:
       sessionSecretRef:
         name: component-compass-secret
         key: AUTH_SECRET
-      cliTokenSecretRef:
-        name: component-compass-secret
-        key: CLI_TOKEN_SECRET
       oidc:
         issuerUrl: "https://auth.${SECRET_DOMAIN}/application/o/component-compass-dev/"
         clientId: "G56M0CU7aFQMcsR56YPXMXV4SgEI54yIOQfRxzi3"
