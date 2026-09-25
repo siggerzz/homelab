@@ -22,7 +22,7 @@ spec:
     # build lands as a value change → rollout. The runner applies migrations on start.
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main@sha256:e4cec07e176a5f9472a6a05a6e1a21d35cf9f174d2dea12b999eba9d7d704410
+      tag: main@sha256:e216fd23014c73dd73fd9bd350bcac92241239443b0e3262377a6e5b77422944
       pullPolicy: Always
 
     # Chart default (512Mi limit) OOM-killed the SSR process — V8 heap died at
