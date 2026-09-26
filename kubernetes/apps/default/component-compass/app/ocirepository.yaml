@@ -7,4 +7,4 @@ spec:
   interval: 5m
   url: oci://ghcr.io/siggerzz/charts/web-app
   ref:
-    semver: ">=0.1.12 <1.0.0"
+    semver: "0.1.12"
