@@ -17,11 +17,6 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    # Held at 0 until the data from component-compass is restored into the new database.
-    replicaCount: 0
-    worker:
-      replicaCount: 0
-
     # Deploy decoupled from the chart's appVersion: track the web-app image directly.
     # Renovate digest-pins the runner `tag` — see renovate.json5 — so each new `main`
     # build lands as a value change → rollout. The runner applies migrations on start.
@@ -44,7 +39,7 @@ spec:
       className: external
       annotations:
         external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-        gatus.home-operations.com/enabled: "false"
+        gatus.home-operations.com/enabled: "true"
         gatus.home-operations.com/endpoint: |
           ui:
             hide-url: true
