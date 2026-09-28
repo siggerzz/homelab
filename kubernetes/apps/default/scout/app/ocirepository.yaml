@@ -1,0 +1,10 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: scout-chart
+spec:
+  interval: 5m
+  url: oci://ghcr.io/siggerzz/charts/scout
+  ref:
+    semver: "0.1.0"

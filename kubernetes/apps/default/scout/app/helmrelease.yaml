@@ -1,0 +1,87 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: scout
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: scout-chart
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    # Held at 0 until the data from component-compass is restored into the new database.
+    replicaCount: 0
+    worker:
+      replicaCount: 0
+
+    # Deploy decoupled from the chart's appVersion: track the web-app image directly.
+    # Renovate digest-pins the runner `tag` — see renovate.json5 — so each new `main`
+    # build lands as a value change → rollout. The runner applies migrations on start.
+    image:
+      repository: ghcr.io/siggerzz/component-compass-web-app
+      tag: main@sha256:0775c94611676d06870db1d9ee2b6d854a702110232d728ba54e63d1e35919f1
+      pullPolicy: Always
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+
+    serviceAccount:
+      create: false
+    ingress:
+      enabled: true
+      className: external
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        gatus.home-operations.com/enabled: "false"
+        gatus.home-operations.com/endpoint: |
+          ui:
+            hide-url: true
+            hide-hostname: true
+          conditions:
+            - "[STATUS] == 200"
+          interval: 5m
+      hosts:
+        - host: &host "scout.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+
+    auth:
+      url: "https://scout.${SECRET_DOMAIN}"
+      sessionSecretRef:
+        name: scout-secret
+        key: AUTH_SECRET
+      oidc:
+        issuerUrl: "https://auth.${SECRET_DOMAIN}/application/o/scout-dev/"
+        clientId: "G56M0CU7aFQMcsR56YPXMXV4SgEI54yIOQfRxzi3"
+        clientSecretRef:
+          name: scout-secret
+          key: OIDC_CLIENT_SECRET
+
+    database:
+      passwordSecretRef:
+        name: scout-secret
+        key: POSTGRES_PASSWORD
+
+    postgresql:
+      enabled: true
+      auth:
+        existingSecret: scout-secret
+      persistence:
+        storageClass: openebs-hostpath
+        size: 5Gi

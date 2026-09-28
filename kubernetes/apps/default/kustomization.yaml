@@ -6,3 +6,4 @@ resources:
   - ./component-compass/ks.yaml
   - ./homepage/ks.yaml
   - ./namespace.yaml
+  - ./scout/ks.yaml
