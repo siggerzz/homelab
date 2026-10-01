@@ -22,7 +22,7 @@ spec:
     # build lands as a value change → rollout. The runner applies migrations on start.
     image:
       repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main@sha256:6d27e3eeda4458a19051ac775b97bf53df3ee84f7d3c447b6e576b9e8da73a38
+      tag: main@sha256:2e9ea7181ad1daa0e6379d703c648bb9cba7ad1af345de057056802daa2fd055
       pullPolicy: Always
 
     resources:
