@@ -21,8 +21,8 @@ spec:
     # Renovate digest-pins the runner `tag` — see renovate.json5 — so each new `main`
     # build lands as a value change → rollout. The runner applies migrations on start.
     image:
-      repository: ghcr.io/siggerzz/component-compass-web-app
-      tag: main@sha256:0d12a07b2a4cb3598bd272b6dc0b67d351b2260b5999b9debee4865e4341b77d
+      repository: ghcr.io/scoutui/scout-web-app
+      tag: main@sha256:39510c94121da51bd134d94bc65e48579d9b502fa83c32bc137809bedbd153f0
       pullPolicy: Always
 
     resources:
