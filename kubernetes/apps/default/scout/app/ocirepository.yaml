@@ -5,6 +5,6 @@ metadata:
   name: scout-chart
 spec:
   interval: 5m
-  url: oci://ghcr.io/siggerzz/charts/scout
+  url: oci://ghcr.io/scoutui/charts/scout
   ref:
-    semver: "0.1.0"
+    semver: "0.3.0"
