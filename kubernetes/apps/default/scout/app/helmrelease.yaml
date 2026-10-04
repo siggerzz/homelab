@@ -58,6 +58,7 @@ spec:
 
     auth:
       url: "https://scout.${SECRET_DOMAIN}"
+      adminGroup: "scout-admins"
       sessionSecretRef:
         name: scout-secret
         key: AUTH_SECRET
@@ -76,6 +77,9 @@ spec:
     postgresql:
       enabled: true
       auth:
+        # The database was created by chart 0.1.0 as user and database "cc"; 0.3.0 defaults to "scout".
+        username: cc
+        database: cc
         existingSecret: scout-secret
       persistence:
         storageClass: openebs-hostpath
