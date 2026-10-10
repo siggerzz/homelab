@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 69.4.1
+      version: 69.8.2
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -27,6 +27,17 @@ spec:
       enabled: false
 
     alertmanager:
+      ingress:
+        enabled: true
+        ingressClassName: internal
+        hosts:
+          - "alertmanager.${SECRET_DOMAIN}"
+      alertmanagerSpec:
+        alertmanagerConfiguration:
+          name: alertmanager
+        externalUrl: "https://alertmanager.${SECRET_DOMAIN}"
+
+    kubeProxy:
       enabled: false
 
     prometheusOperator:
@@ -58,3 +69,41 @@ spec:
       prometheus:
         monitor:
           enabled: true
+
+    additionalPrometheusRulesMap:
+      flux-rules:
+        groups:
+          - name: flux
+            rules:
+              - alert: FluxInstanceNotReady
+                annotations:
+                  summary: Flux instance {{ $labels.name }} is not ready ({{ $labels.reason }})
+                expr: flux_instance_info{ready!="True"} == 1
+                for: 15m
+                labels:
+                  severity: critical
+              - alert: FluxResourceNotReady
+                annotations:
+                  summary: "{{ $labels.kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} is not ready ({{ $labels.reason }})"
+                expr: flux_resource_info{ready!="True", suspended!="True"} == 1
+                for: 30m
+                labels:
+                  severity: critical
+      volsync-rules:
+        groups:
+          - name: volsync
+            rules:
+              - alert: VolSyncComponentAbsent
+                annotations:
+                  summary: VolSync metrics are missing, so backup failures would go unnoticed
+                expr: absent(up{job="volsync-metrics"})
+                for: 15m
+                labels:
+                  severity: critical
+              - alert: VolSyncVolumeOutOfSync
+                annotations:
+                  summary: Backup of {{ $labels.obj_namespace }}/{{ $labels.obj_name }} missed its schedule
+                expr: volsync_volume_out_of_sync == 1
+                for: 15m
+                labels:
+                  severity: critical

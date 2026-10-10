@@ -1,5 +1,5 @@
 ---
 serviceMonitor:
   create: true
-  additionalLabels:
+  labels:
     release: kube-prometheus-stack

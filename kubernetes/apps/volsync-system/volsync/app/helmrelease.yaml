@@ -18,6 +18,16 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: ServiceMonitor
+              name: volsync
+            patch: |-
+              - op: add
+                path: /metadata/labels/release
+                value: kube-prometheus-stack
   values:
     fullnameOverride: volsync
     image: &image
