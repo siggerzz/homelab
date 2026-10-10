@@ -48,7 +48,7 @@ spec:
               tag: 2.2.3-bookworm@sha256:9a5942e64b35c5497c591b9bf177f4a3002d43440bf0a5e1a14fc34667b1a5c1
             env:
               # renovate: datasource=github-releases depName=herdrdev/herdr
-              HERDR_VERSION: v0.9.0
+              HERDR_VERSION: v0.9.3
               # renovate: datasource=github-releases depName=tsl0922/ttyd
               TTYD_VERSION: 1.7.7
               # renovate: datasource=github-releases depName=cli/cli
