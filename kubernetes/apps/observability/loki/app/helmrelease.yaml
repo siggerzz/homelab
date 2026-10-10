@@ -58,6 +58,8 @@ spec:
         requests:
           cpu: 100m
           memory: 256Mi
+    chunksCache:
+      allocatedMemory: 1024
     backend:
       replicas: 0
     read:
