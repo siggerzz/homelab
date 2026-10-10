@@ -84,6 +84,7 @@ spec:
               globalMounts:
                 - path: /config
     defaultPodOptions:
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
