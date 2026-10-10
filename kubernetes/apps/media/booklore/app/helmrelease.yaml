@@ -31,7 +31,7 @@ spec:
           nginx-config:
             image:
               repository: ghcr.io/booklore-app/booklore
-              tag: v2.4.0@sha256:8dfc862bcf28b3da356702d0b966acbe6a4de19ef45b708e23e21419a8bce8ed
+              tag: v1.18.5@sha256:9c4a8a31aede653c1e5bd7a6e61cb3ef63c964e40fb3267546def7b3f30fdf7e
             command:
               - /bin/sh
               - -c
@@ -48,7 +48,7 @@ spec:
           booklore:
             image:
               repository: ghcr.io/booklore-app/booklore
-              tag: v2.4.0@sha256:8dfc862bcf28b3da356702d0b966acbe6a4de19ef45b708e23e21419a8bce8ed
+              tag: v1.18.5@sha256:9c4a8a31aede653c1e5bd7a6e61cb3ef63c964e40fb3267546def7b3f30fdf7e
             command:
               - java
             args:
@@ -95,7 +95,7 @@ spec:
           nginx:
             image:
               repository: ghcr.io/booklore-app/booklore
-              tag: v2.4.0@sha256:8dfc862bcf28b3da356702d0b966acbe6a4de19ef45b708e23e21419a8bce8ed
+              tag: v1.18.5@sha256:9c4a8a31aede653c1e5bd7a6e61cb3ef63c964e40fb3267546def7b3f30fdf7e
             command:
               - nginx
             args:
@@ -126,7 +126,7 @@ spec:
           mariadb:
             image:
               repository: mariadb
-              tag: 11.8.9
+              tag: 11.4.5
             env:
               MYSQL_ROOT_PASSWORD:
                 valueFrom:
