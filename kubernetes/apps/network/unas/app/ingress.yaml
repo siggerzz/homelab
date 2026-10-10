@@ -15,7 +15,7 @@ metadata:
     external-dns.alpha.kubernetes.io/target: "192.168.1.20"
 spec:
   type: ExternalName
-  externalName: ${SECRET_NAS_IP}
+  externalName: ${NAS_IP}
   ports:
     - name: https
       port: 443

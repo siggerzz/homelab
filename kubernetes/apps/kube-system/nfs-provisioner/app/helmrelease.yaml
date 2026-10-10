@@ -23,7 +23,7 @@ spec:
       retries: 3
   values:
     nfs:
-      server: ${SECRET_NAS_IP}
+      server: ${NAS_IP}
       path: /var/nfs/shared/k8s/pvc
     storageClass:
       name: nfs-volsync

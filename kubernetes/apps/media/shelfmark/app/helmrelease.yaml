@@ -115,13 +115,13 @@ spec:
           - path: /config
       books:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media/Books
         globalMounts:
           - path: /books
       media:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media
         globalMounts:
           - path: /media

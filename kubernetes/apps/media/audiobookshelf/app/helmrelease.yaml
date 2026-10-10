@@ -105,13 +105,13 @@ spec:
           - path: /config
       audiobooks:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media/Audiobooks
         globalMounts:
           - path: /audiobooks
       podcasts:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media/Podcasts
         globalMounts:
           - path: /podcasts

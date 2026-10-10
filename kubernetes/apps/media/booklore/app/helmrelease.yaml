@@ -196,13 +196,13 @@ spec:
           - path: /app/data
       books:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media/Books
         globalMounts:
           - path: /books
       bookdrop:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media/Books/bookdrop
         globalMounts:
           - path: /bookdrop

@@ -92,7 +92,7 @@ spec:
       media:
         enabled: true
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media
     env:
       TZ: "Europe/London"
