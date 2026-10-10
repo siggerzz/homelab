@@ -5,10 +5,11 @@ metadata:
   name: cluster-apps-intel-gpu-plugin
   namespace: flux-system
 spec:
+  targetNamespace: kube-system
   interval: 10m
   path: "./kubernetes/apps/kube-system/intel-gpu-plugin/app"
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
   wait: false 
