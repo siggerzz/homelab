@@ -126,7 +126,7 @@ spec:
           mariadb:
             image:
               repository: mariadb
-              tag: 11.4.5
+              tag: 11.8.9
             env:
               MYSQL_ROOT_PASSWORD:
                 valueFrom:
