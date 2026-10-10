@@ -16,6 +16,7 @@
   ],
   prConcurrentLimit: 10,
   minimumReleaseAge: '3 days',
+  minimumReleaseAgeBehaviour: 'timestamp-optional',
   schedule: [
     'every weekend',
   ],
@@ -94,6 +95,22 @@
         'digest',
         'pinDigest',
       ],
+      automerge: true,
+      automergeType: 'branch',
+      ignoreTests: true,
+    },
+    {
+      description: [
+        'Group mise CLI tool minor and patch updates into one auto-merged branch. They only change local tooling in .mise.toml, and as individual PRs they once held every concurrent PR slot and stalled cluster updates.',
+      ],
+      matchManagers: [
+        'mise',
+      ],
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+      ],
+      groupName: 'mise-tools',
       automerge: true,
       automergeType: 'branch',
       ignoreTests: true,
