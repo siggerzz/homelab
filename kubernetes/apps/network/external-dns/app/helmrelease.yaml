@@ -34,6 +34,7 @@ spec:
             name: external-dns-secret
             key: CF_API_TOKEN
     extraArgs:
+      - --enable-legacy-annotation-prefix
       - --cloudflare-dns-records-per-page=1000
       - --cloudflare-proxied
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1

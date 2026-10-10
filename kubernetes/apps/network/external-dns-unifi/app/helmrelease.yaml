@@ -58,6 +58,7 @@ spec:
           initialDelaySeconds: 10
           timeoutSeconds: 5
     extraArgs:
+      - --enable-legacy-annotation-prefix
       - --ingress-class=internal
       - --ignore-ingress-tls-spec
     policy: sync
