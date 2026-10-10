@@ -101,7 +101,7 @@ spec:
         existingClaim: sabnzbd
       media:
         type: nfs
-        server: ${SECRET_NAS_IP}
+        server: ${NAS_IP}
         path: /var/nfs/shared/Media
         globalMounts:
           - path: /media
