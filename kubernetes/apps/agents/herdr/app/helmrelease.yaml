@@ -52,7 +52,7 @@ spec:
               # renovate: datasource=github-releases depName=tsl0922/ttyd
               TTYD_VERSION: 1.7.7
               # renovate: datasource=github-releases depName=cli/cli
-              GH_VERSION: v2.100.0
+              GH_VERSION: v2.102.0
             # $${...} escapes Flux substitution so the shell sees ${...}
             command: ["/bin/sh", "-c"]
             args:
