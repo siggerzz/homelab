@@ -101,6 +101,31 @@
     },
     {
       description: [
+        'Auto-merge minor updates of app images once their checks pass. Limited to apps where a bad update breaks only that app; anything that can take down the cluster or the network, and anything still on 0.x, stays manual.',
+      ],
+      matchDatasources: [
+        'docker',
+      ],
+      matchUpdateTypes: [
+        'minor',
+      ],
+      matchCurrentVersion: '!/^v?0\\./',
+      matchPackageNames: [
+        '/home-operations/(sonarr|radarr|prowlarr|qbittorrent|sabnzbd)$/',
+        'ghcr.io/advplyr/audiobookshelf',
+        'ghcr.io/booklore-app/booklore',
+        'ghcr.io/calibrain/shelfmark',
+        'ghcr.io/coder/code-server',
+        'ghcr.io/gethomepage/homepage',
+        'ghcr.io/seerr-team/seerr',
+        'ghcr.io/twin/gatus',
+        'ghcr.io/unpoller/unpoller',
+      ],
+      automerge: true,
+      automergeType: 'pr',
+    },
+    {
+      description: [
         'Group mise CLI tool minor and patch updates into one auto-merged branch. They only change local tooling in .mise.toml, and as individual PRs they once held every concurrent PR slot and stalled cluster updates.',
       ],
       matchManagers: [
