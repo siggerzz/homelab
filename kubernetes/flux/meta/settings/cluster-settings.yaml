@@ -5,4 +5,5 @@ kind: ConfigMap
 metadata:
   name: cluster-settings
   namespace: flux-system
-data: {}
+data:
+  NAS_IP: "192.168.1.94"
