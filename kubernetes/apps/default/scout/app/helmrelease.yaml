@@ -8,14 +8,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: scout-chart
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
   values:
     # Deploy decoupled from the chart's appVersion: track the web-app image directly.
     # Renovate digest-pins the runner `tag` — see renovate.json5 — so each new `main`

@@ -15,13 +15,8 @@ spec:
         namespace: flux-system
   install:
     crds: Skip
-    remediation:
-      retries: 3
   upgrade:
-    cleanupOnFail: true
     crds: Skip
-    remediation:
-      retries: 3
   values:
     crds:
       enabled: false
