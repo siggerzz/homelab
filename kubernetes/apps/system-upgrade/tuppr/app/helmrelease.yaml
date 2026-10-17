@@ -18,3 +18,13 @@ spec:
     crds: CreateReplace
   values:
     replicaCount: 2
+    monitoring:
+      # Prometheus only selects monitors and rules with this label
+      serviceMonitor:
+        enabled: true
+        labels:
+          release: kube-prometheus-stack
+      prometheusRule:
+        enabled: true
+        labels:
+          release: kube-prometheus-stack
