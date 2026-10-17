@@ -7,6 +7,7 @@
     ':dependencyDashboard',
     ':disableRateLimiting',
     ':semanticCommits',
+    'github>home-operations/renovate-presets//apps/talosFactory.json5#8.1.0',
   ],
   dependencyDashboard: true,
   dependencyDashboardTitle: 'Renovate Dashboard 🤖',
@@ -213,19 +214,34 @@
     },
     {
       description: [
-        'Talos Group',
+        'Talos Group: the talosctl mise pin, talosVersion in talconfig.yaml and the tuppr TalosUpgrade (all named siderolabs/talos by the talosFactory preset). Merging rolls every node through a reboot, so never auto-merge, and offer one minor version at a time.',
       ],
       groupName: 'Talos',
-      matchDatasources: [
-        'docker',
+      matchPackageNames: [
+        'siderolabs/talos',
       ],
       group: {
         commitMessageTopic: '{{{groupName}}} group',
       },
-      matchPackageNames: [
-        '/siderolabs/talosctl/',
-        '/siderolabs/installer/',
+      automerge: false,
+      separateMultipleMinor: true,
+    },
+    {
+      description: [
+        'Kubernetes Group: kubernetesVersion in talconfig.yaml and the tuppr KubernetesUpgrade. Never auto-merge, and offer one minor version at a time; check the Talos support matrix before merging a minor.',
       ],
+      groupName: 'Kubernetes',
+      matchDatasources: [
+        'docker',
+      ],
+      matchPackageNames: [
+        'ghcr.io/siderolabs/kubelet',
+      ],
+      group: {
+        commitMessageTopic: '{{{groupName}}} group',
+      },
+      automerge: false,
+      separateMultipleMinor: true,
     },
     {
       matchDatasources: [

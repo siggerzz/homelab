@@ -6,6 +6,7 @@ metadata:
   namespace: system-upgrade
 spec:
   kubernetes:
+    # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
     version: v1.35.0
   healthChecks:
     # Ensure all nodes are Ready before upgrading
