@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: 10.11.11
+              tag: "12.2"
             env:
               TZ: "Europe/London"
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
@@ -41,6 +41,18 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
+              # Database migrations on a major upgrade run before /health is up;
+              # allow up to 30 minutes so liveness can't kill Jellyfin mid-migration
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 180
             resources:
               requests:
                 gpu.intel.com/i915: 1
@@ -77,6 +89,8 @@ spec:
           gethomepage.dev/widget.type: jellyfin
           gethomepage.dev/widget.url: http://jellyfin.media.svc.cluster.local:8096
           gethomepage.dev/widget.key: '{{ "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}" }}'
+          # Jellyfin 12 removed the /emby routes and api_key auth the default (v1) widget uses
+          gethomepage.dev/widget.version: "2"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: "jellyfin.${SECRET_DOMAIN}"
