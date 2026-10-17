@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
+# TRaSH Guides profiles, synced daily. Profile choices:
+#   TV: WEB-1080p by default, WEB-2160p per show, [Anime] Remux-1080p for anime
+#   Movies: UHD Bluray + WEB by default, HD Bluray + WEB, Remux + WEB 2160p per film
+sonarr:
+  sonarr:
+    base_url: http://sonarr.media.svc.cluster.local
+    api_key: !env_var SONARR_API_KEY
+    delete_old_custom_formats: true
+
+    # Sonarr v4 has one size table per instance; series covers TV and anime
+    quality_definition:
+      type: series
+
+    quality_profiles:
+      - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+        reset_unmatched_scores:
+          enabled: true
+      - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+        reset_unmatched_scores:
+          enabled: true
+      - trash_id: 20e0fc959f1f1704bed501f23bdae76f # [Anime] Remux-1080p
+        reset_unmatched_scores:
+          enabled: true
+
+    custom_format_groups:
+      add:
+        - trash_id: 158188097a58d7687dee647e04af0da3 # [Optional] Golden Rule HD
+          assign_scores_to:
+            - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+        - trash_id: e3f37512790f00d0e89e54fe5e790d1c # [Optional] Golden Rule UHD
+          assign_scores_to:
+            - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+        - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4 # [Optional] Language Profiles
+          assign_scores_to:
+            - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+            - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+        - trash_id: 85fae4a2294965b75710ef2989c850eb # [Streaming Services] HD/UHD boost
+          assign_scores_to:
+            - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+            - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+        - trash_id: 59c3af66780d08332fdc64e68297098f # [Unwanted] Unwanted Formats
+          assign_scores_to:
+            - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+            - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
+
+radarr:
+  radarr:
+    base_url: http://radarr.media.svc.cluster.local
+    api_key: !env_var RADARR_API_KEY
+    delete_old_custom_formats: true
+
+    quality_definition:
+      type: movie
+
+    quality_profiles:
+      - trash_id: 64fb5f9858489bdac2af690e27c8f42f # UHD Bluray + WEB
+        reset_unmatched_scores:
+          enabled: true
+      - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+        reset_unmatched_scores:
+          enabled: true
+      - trash_id: fd161a61e3ab826d3a22d53f935696dd # Remux + WEB 2160p
+        reset_unmatched_scores:
+          enabled: true
+
+    custom_format_groups:
+      add:
+        - trash_id: f8bf8eab4617f12dfdbd16303d8da245 # [Optional] Golden Rule HD
+          assign_scores_to:
+            - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+        - trash_id: ff204bbcecdd487d1cefcefdbf0c278d # [Optional] Golden Rule UHD
+          assign_scores_to:
+            - trash_id: 64fb5f9858489bdac2af690e27c8f42f # UHD Bluray + WEB
+            - trash_id: fd161a61e3ab826d3a22d53f935696dd # Remux + WEB 2160p
+        - trash_id: a3ac6af01d78e4f21fcb75f601ac96df # [Unwanted] Unwanted Formats
+          assign_scores_to:
+            - trash_id: 64fb5f9858489bdac2af690e27c8f42f # UHD Bluray + WEB
+            - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+            - trash_id: fd161a61e3ab826d3a22d53f935696dd # Remux + WEB 2160p
