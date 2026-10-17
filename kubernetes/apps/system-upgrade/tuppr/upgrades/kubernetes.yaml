@@ -1,0 +1,30 @@
+---
+apiVersion: tuppr.home-operations.com/v1alpha1
+kind: KubernetesUpgrade
+metadata:
+  name: kubernetes
+  namespace: system-upgrade
+spec:
+  kubernetes:
+    version: v1.35.0
+  healthChecks:
+    # Ensure all nodes are Ready before upgrading
+    - description: nodes-ready
+      timeout: 5m
+      apiVersion: v1
+      kind: Node
+      expr: |
+        status.conditions.filter(c, c.type == "Ready").all(c, c.status == "True")
+    # Wait for VolSync backups and restores to finish before upgrading
+    - description: volsync-backups-idle
+      timeout: 10m
+      apiVersion: volsync.backube/v1alpha1
+      kind: ReplicationSource
+      expr: |
+        !has(status.conditions) || !status.conditions.exists(c, c.type == "Synchronizing" && c.status == "True")
+    - description: volsync-restores-idle
+      timeout: 10m
+      apiVersion: volsync.backube/v1alpha1
+      kind: ReplicationDestination
+      expr: |
+        !has(status.conditions) || !status.conditions.exists(c, c.type == "Synchronizing" && c.status == "True")
