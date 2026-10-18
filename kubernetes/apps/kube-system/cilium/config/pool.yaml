@@ -7,7 +7,5 @@ metadata:
 spec:
   allowFirstLastIPs: "Yes"
   blocks:
-    - cidr: "192.168.1.0/24"
-    # Homelab VLAN 10 (migration in progress; services still pin 192.168.1.x)
     - start: "192.168.10.20"
       stop: "192.168.10.49"
