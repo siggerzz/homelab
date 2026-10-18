@@ -5,7 +5,7 @@ talosVersion: v1.12.12
 kubernetesVersion: v1.35.0
 
 clusterName: kubernetes
-endpoint: https://192.168.1.10:6443
+endpoint: https://192.168.10.10:6443
 
 clusterPodNets:
   - "10.69.0.0/16"
@@ -24,7 +24,7 @@ cniConfig:
 
 nodes:
   - hostname: "glados-c01"
-    ipAddress: "192.168.1.11"
+    ipAddress: "192.168.10.11"
     installDiskSelector:
       model: "SanDisk SD9TB8W2*"
     machineSpec:
@@ -44,16 +44,21 @@ nodes:
         vip:
           ip: "192.168.1.10"
         vlans:
-          # Homelab VLAN 10 (migration in progress; no default route here yet)
+          # Homelab VLAN 10 (migration in progress)
           - vlanId: 10
             dhcp: false
             addresses:
               - "192.168.10.11/24"
             mtu: 1500
+            routes:
+              # Preferred over the eno1 default route (metric 1024) until cleanup removes it
+              - network: "0.0.0.0/0"
+                gateway: "192.168.10.1"
+                metric: 100
             vip:
               ip: "192.168.10.10"
   - hostname: "glados-w01"
-    ipAddress: "192.168.1.12"
+    ipAddress: "192.168.10.12"
     installDiskSelector:
       model: "SanDisk SD9TB8W2*"
     machineSpec:
@@ -73,16 +78,21 @@ nodes:
         vip:
           ip: "192.168.1.10"
         vlans:
-          # Homelab VLAN 10 (migration in progress; no default route here yet)
+          # Homelab VLAN 10 (migration in progress)
           - vlanId: 10
             dhcp: false
             addresses:
               - "192.168.10.12/24"
             mtu: 1500
+            routes:
+              # Preferred over the eno1 default route (metric 1024) until cleanup removes it
+              - network: "0.0.0.0/0"
+                gateway: "192.168.10.1"
+                metric: 100
             vip:
               ip: "192.168.10.10"
   - hostname: "glados-w02"
-    ipAddress: "192.168.1.13"
+    ipAddress: "192.168.10.13"
     installDiskSelector:
       model: "SanDisk SD9TB8W2*"
     machineSpec:
@@ -102,12 +112,17 @@ nodes:
         vip:
           ip: "192.168.1.10"
         vlans:
-          # Homelab VLAN 10 (migration in progress; no default route here yet)
+          # Homelab VLAN 10 (migration in progress)
           - vlanId: 10
             dhcp: false
             addresses:
               - "192.168.10.13/24"
             mtu: 1500
+            routes:
+              # Preferred over the eno1 default route (metric 1024) until cleanup removes it
+              - network: "0.0.0.0/0"
+                gateway: "192.168.10.1"
+                metric: 100
             vip:
               ip: "192.168.10.10"
 
