@@ -79,7 +79,7 @@ spec:
     # --- Service ---
     service:
       annotations:
-        lbipam.cilium.io/ips: "192.168.1.20"
+        lbipam.cilium.io/ips: "192.168.10.20"
       spec:
         externalTrafficPolicy: Cluster
     # --- TLS ---
