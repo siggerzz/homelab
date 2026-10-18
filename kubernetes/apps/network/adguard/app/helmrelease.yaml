@@ -61,8 +61,7 @@ spec:
         controller: adguard
         type: LoadBalancer
         annotations:
-          # Homelab VLAN migration: serve both until every client uses 192.168.10.23
-          lbipam.cilium.io/ips: "192.168.1.23,192.168.10.23"
+          lbipam.cilium.io/ips: "192.168.10.23"
         externalTrafficPolicy: Cluster
         ports:
           dns-tcp:
