@@ -4,6 +4,8 @@ cluster:
     extraArgs:
       # Pinned so moving the cluster endpoint to the Homelab VLAN doesn't invalidate SA tokens
       service-account-issuer: https://192.168.1.10:6443
+      # Talos derives api-audiences from the endpoint; keep accepting tokens minted for the old one
+      api-audiences: https://192.168.10.10:6443,https://192.168.1.10:6443
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
