@@ -43,6 +43,13 @@ nodes:
         mtu: 1500
         vip:
           ip: "192.168.1.10"
+        vlans:
+          # Homelab VLAN 10 (migration in progress; no default route here yet)
+          - vlanId: 10
+            dhcp: false
+            addresses:
+              - "192.168.10.11/24"
+            mtu: 1500
   - hostname: "glados-w01"
     ipAddress: "192.168.1.12"
     installDiskSelector:
@@ -63,6 +70,13 @@ nodes:
         mtu: 1500
         vip:
           ip: "192.168.1.10"
+        vlans:
+          # Homelab VLAN 10 (migration in progress; no default route here yet)
+          - vlanId: 10
+            dhcp: false
+            addresses:
+              - "192.168.10.12/24"
+            mtu: 1500
   - hostname: "glados-w02"
     ipAddress: "192.168.1.13"
     installDiskSelector:
@@ -83,6 +97,13 @@ nodes:
         mtu: 1500
         vip:
           ip: "192.168.1.10"
+        vlans:
+          # Homelab VLAN 10 (migration in progress; no default route here yet)
+          - vlanId: 10
+            dhcp: false
+            addresses:
+              - "192.168.10.13/24"
+            mtu: 1500
 
 # Global patches
 patches:
