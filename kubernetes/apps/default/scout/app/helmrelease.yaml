@@ -24,6 +24,10 @@ spec:
       limits:
         memory: 1Gi
 
+    extraEnv:
+      - name: SCOUTUI_TRUSTED_PROXY_HOPS
+        value: "2"
+
     serviceAccount:
       create: false
     ingress:
