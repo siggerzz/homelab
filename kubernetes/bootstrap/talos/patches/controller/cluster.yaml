@@ -1,5 +1,9 @@
 cluster:
   allowSchedulingOnControlPlanes: true
+  apiServer:
+    extraArgs:
+      # Pinned so moving the cluster endpoint to the Homelab VLAN doesn't invalidate SA tokens
+      service-account-issuer: https://192.168.1.10:6443
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
@@ -8,8 +12,13 @@ cluster:
   etcd:
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
+    # Homelab VLAN migration: advertise 10.x first, keep 1.x until cleanup
     advertisedSubnets:
+      - 192.168.10.0/24
       - 192.168.1.0/24
+    listenSubnets:
+      - 192.168.1.0/24
+      - 192.168.10.0/24
   proxy:
     disabled: true
   scheduler:
