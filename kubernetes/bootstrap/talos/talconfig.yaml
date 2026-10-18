@@ -13,7 +13,6 @@ clusterSvcNets:
   - "10.96.0.0/16"
 
 additionalApiServerCertSans: &sans
-  - "192.168.1.10"
   - "192.168.10.10"
   - "127.0.0.1"
 additionalMachineCertSans: *sans
@@ -35,23 +34,15 @@ nodes:
       - deviceSelector:
           hardwareAddr: "e8:6a:64:92:4e:f5"
         dhcp: false
-        addresses:
-          - "192.168.1.11/24"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
         mtu: 1500
-        vip:
-          ip: "192.168.1.10"
         vlans:
-          # Homelab VLAN 10 (migration in progress)
+          # Homelab VLAN 10; the untagged NIC carries no address
           - vlanId: 10
             dhcp: false
             addresses:
               - "192.168.10.11/24"
             mtu: 1500
             routes:
-              # Preferred over the eno1 default route (metric 1024) until cleanup removes it
               - network: "0.0.0.0/0"
                 gateway: "192.168.10.1"
                 metric: 100
@@ -69,23 +60,15 @@ nodes:
       - deviceSelector:
           hardwareAddr: "54:05:db:82:ce:9a"
         dhcp: false
-        addresses:
-          - "192.168.1.12/24"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
         mtu: 1500
-        vip:
-          ip: "192.168.1.10"
         vlans:
-          # Homelab VLAN 10 (migration in progress)
+          # Homelab VLAN 10; the untagged NIC carries no address
           - vlanId: 10
             dhcp: false
             addresses:
               - "192.168.10.12/24"
             mtu: 1500
             routes:
-              # Preferred over the eno1 default route (metric 1024) until cleanup removes it
               - network: "0.0.0.0/0"
                 gateway: "192.168.10.1"
                 metric: 100
@@ -103,23 +86,15 @@ nodes:
       - deviceSelector:
           hardwareAddr: "e8:6a:64:9a:c4:21"
         dhcp: false
-        addresses:
-          - "192.168.1.13/24"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
         mtu: 1500
-        vip:
-          ip: "192.168.1.10"
         vlans:
-          # Homelab VLAN 10 (migration in progress)
+          # Homelab VLAN 10; the untagged NIC carries no address
           - vlanId: 10
             dhcp: false
             addresses:
               - "192.168.10.13/24"
             mtu: 1500
             routes:
-              # Preferred over the eno1 default route (metric 1024) until cleanup removes it
               - network: "0.0.0.0/0"
                 gateway: "192.168.10.1"
                 metric: 100
