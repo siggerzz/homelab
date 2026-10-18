@@ -12,7 +12,7 @@ metadata:
   name: unas
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "nas.${SECRET_DOMAIN}"
-    external-dns.alpha.kubernetes.io/target: "192.168.1.20"
+    external-dns.alpha.kubernetes.io/target: "192.168.10.20"
 spec:
   type: ExternalName
   externalName: ${NAS_IP}
