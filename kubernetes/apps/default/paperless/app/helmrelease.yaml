@@ -44,6 +44,10 @@ spec:
                   httpGet:
                     path: /accounts/login/
                     port: *port
+                    # Django only accepts PAPERLESS_URL's host, plus localhost
+                    httpHeaders: &probeHost
+                      - name: Host
+                        value: localhost
                   periodSeconds: 30
                   timeoutSeconds: 5
                   failureThreshold: 3
@@ -55,6 +59,7 @@ spec:
                   httpGet:
                     path: /accounts/login/
                     port: *port
+                    httpHeaders: *probeHost
                   # first boot runs database migrations
                   periodSeconds: 10
                   failureThreshold: 60
