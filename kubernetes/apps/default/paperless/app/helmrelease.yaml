@@ -1,0 +1,158 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: paperless
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 5.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controllers:
+      paperless:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 3.3.3@sha256:dba0242c1df1843643df4eb50ce5639f3a7900f414879088fd5bed8eaf2d456d
+            env:
+              PAPERLESS_URL: "https://paperless.${SECRET_DOMAIN}"
+              PAPERLESS_PORT: &port 8000
+              PAPERLESS_REDIS: redis://localhost:6379
+              PAPERLESS_TIME_ZONE: Europe/London
+              PAPERLESS_OCR_LANGUAGE: eng
+              # NFS has no inotify, so poll the consume folder instead
+              PAPERLESS_CONSUMER_POLLING_INTERVAL: "60"
+              PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+            envFrom:
+              - secretRef:
+                  name: paperless-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /accounts/login/
+                    port: *port
+                    # Django only accepts PAPERLESS_URL's host, plus localhost
+                    httpHeaders: &probeHost
+                      - name: Host
+                        value: localhost
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /accounts/login/
+                    port: *port
+                    httpHeaders: *probeHost
+                  # first boot runs database migrations
+                  periodSeconds: 10
+                  failureThreshold: 60
+            securityContext:
+              allowPrivilegeEscalation: false
+              # s6-overlay in the image needs a writable root filesystem
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+          valkey:
+            image:
+              repository: docker.io/valkey/valkey
+              tag: 9.1.2@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: paperless
+        ports:
+          http:
+            port: *port
+    ingress:
+      app:
+        className: internal
+        # No Authentik forward-auth middleware: Paperless logs in via OIDC itself,
+        # and the mobile apps/API need to reach it without a browser login wall.
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |
+            ui:
+              hide-url: true
+              hide-hostname: true
+            conditions:
+              - "[STATUS] == 200"
+            interval: 5m
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/icon: paperless-ngx
+          gethomepage.dev/name: Paperless
+          gethomepage.dev/group: Documents
+        hosts:
+          - host: "paperless.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+    persistence:
+      data:
+        existingClaim: paperless
+        advancedMounts:
+          paperless:
+            app:
+              - path: /usr/src/paperless/data
+      media:
+        type: nfs
+        server: ${NAS_IP}
+        path: /var/nfs/shared/Documents/Paperless/media
+        advancedMounts:
+          paperless:
+            app:
+              - path: /usr/src/paperless/media
+      consume:
+        type: nfs
+        server: ${NAS_IP}
+        path: /var/nfs/shared/Documents/Paperless/consume
+        advancedMounts:
+          paperless:
+            app:
+              - path: /usr/src/paperless/consume
+      valkey-data:
+        type: emptyDir
+        advancedMounts:
+          paperless:
+            valkey:
+              - path: /data
