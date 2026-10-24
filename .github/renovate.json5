@@ -26,32 +26,27 @@
   ],
   flux: {
     managerFilePatterns: [
-      '/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/',
+      '/(^|/)kubernetes/.+\\.ya?ml$/',
     ],
   },
   'helm-values': {
     managerFilePatterns: [
-      '/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/',
+      '/(^|/)kubernetes/.+\\.ya?ml$/',
     ],
   },
   helmfile: {
     managerFilePatterns: [
-      '/(^|/)helmfile\\.ya?ml(?:\\.j2)?$/',
+      '/(^|/)helmfile\\.ya?ml$/',
     ],
   },
   kubernetes: {
     managerFilePatterns: [
-      '/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/',
+      '/(^|/)kubernetes/.+\\.ya?ml$/',
     ],
   },
   kustomize: {
     managerFilePatterns: [
-      '/(^|/)kustomization\\.ya?ml(?:\\.j2)?$/',
-    ],
-  },
-  pip_requirements: {
-    managerFilePatterns: [
-      '/(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$/',
+      '/(^|/)kustomization\\.ya?ml$/',
     ],
   },
   packageRules: [
@@ -471,7 +466,7 @@
         'Process YAML custom dependencies',
       ],
       managerFilePatterns: [
-        '/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/',
+        '/(^|/)kubernetes/.+\\.ya?ml$/',
       ],
       matchStrings: [
         'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+(:\\s|=)(&\\S+\\s)?(?<currentValue>\\S+)',

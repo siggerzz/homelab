@@ -1,18 +1,12 @@
 [env]
-_.python.venv = { path = "{{config_root}}/.venv", create = true }
 KUBECONFIG = "{{config_root}}/kubeconfig"
 SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
 TALOSCONFIG = "{{config_root}}/kubernetes/bootstrap/talos/clusterconfig/talosconfig"
 TASK_X_ENV_PRECEDENCE = 1
 TASK_X_MAP_VARIABLES = 0
 
-[tasks.deps]
-description = "Install dependencies"
-run = "uv pip install -r requirements.txt"
-
 [tools]
-# Template tools
-python = "3.14.8"
+# Runs flux-local locally via uvx
 uv = "0.12.24"
 # Operations tools
 "aqua:budimanjojo/talhelper" = "3.1.17"
@@ -28,4 +22,3 @@ uv = "0.12.24"
 "aqua:kubernetes/kubectl" = "1.35.0"
 "aqua:mikefarah/yq" = "4.54.1"
 "aqua:siderolabs/talos" = "1.14.2"
-"aqua:yannh/kubeconform" = "0.8.0"

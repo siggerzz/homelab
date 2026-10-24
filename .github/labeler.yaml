@@ -1,7 +1,4 @@
 ---
-area/templates:
-  - changed-files:
-      - any-glob-to-any-file: templates/**/*
 area/github:
   - changed-files:
       - any-glob-to-any-file: .github/**/*

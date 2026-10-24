@@ -12,7 +12,6 @@ resources:
   - ./external-secrets.yaml
   - ./grafana.yaml
   - ./jetstack.yaml
-  - ./k8s-gateway.yaml
   - ./metrics-server.yaml
   - ./nfs-provisioner.yaml
   - ./node-feature-discovery.yaml
