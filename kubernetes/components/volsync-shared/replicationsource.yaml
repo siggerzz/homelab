@@ -1,0 +1,39 @@
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: "${VOLSYNC_CLAIM}"
+spec:
+  sourcePVC: "${VOLSYNC_CLAIM}"
+  trigger:
+    schedule: "0 2 * * *"
+  kopia:
+    repository: "${APP}-volsync-secret"
+    copyMethod: Direct
+    compression: zstd-fastest
+    parallelism: 2
+    cacheCapacity: 1Gi
+    cacheStorageClassName: openebs-hostpath
+    cacheAccessModes:
+      - ReadWriteOnce
+    # One kopia repository at a fixed path for every app, so a rebuilt cluster
+    # finds the existing backups. Snapshots are told apart by source name and namespace.
+    moverVolumes:
+      - mountPath: repository
+        volumeSource:
+          nfs:
+            server: "${NAS_IP}"
+            path: /var/nfs/shared/k8s/volsync
+    moverSecurityContext:
+      runAsUser: ${VOLSYNC_UID:=1000}
+      runAsGroup: ${VOLSYNC_GID:=1000}
+      fsGroup: ${VOLSYNC_GID:=1000}
+    # Every rule set explicitly: kopia fills unset ones with its own defaults
+    # (10 latest, 48 hourly, 24 monthly, 3 annual)
+    retain:
+      latest: 0
+      hourly: 0
+      daily: 7
+      weekly: 4
+      monthly: 6
+      yearly: 0

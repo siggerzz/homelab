@@ -1,0 +1,28 @@
+---
+# Maintenance deletes the data of expired snapshots and compacts the repository.
+# Without it, kopia only runs maintenance from the client that created the repository,
+# which was a throwaway mover pod, so it never ran.
+apiVersion: volsync.backube/v1alpha1
+kind: KopiaMaintenance
+metadata:
+  name: volsync-shared
+spec:
+  repository:
+    repository: volsync-maintenance-secret
+  trigger:
+    # After the 02:00 backups
+    schedule: "0 4 * * *"
+  cacheCapacity: 1Gi
+  cacheStorageClassName: openebs-hostpath
+  cacheAccessModes:
+    - ReadWriteOnce
+  moverVolumes:
+    - mountPath: repository
+      volumeSource:
+        nfs:
+          server: "${NAS_IP}"
+          path: /var/nfs/shared/k8s/volsync
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
