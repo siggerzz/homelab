@@ -13,6 +13,8 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
+    - name: external-secrets-stores
+    - name: volsync
     - name: mosquitto
   path: ./kubernetes/apps/home/zigbee2mqtt/app
   prune: true
