@@ -57,6 +57,15 @@
   packageRules: [
     {
       description: [
+        'Major updates wait on the Dependency Dashboard until approved there. Unmerged major PRs once held 7 of the 10 concurrent PR slots for months and stalled every patch behind them, including Kubernetes and Cilium.',
+      ],
+      matchUpdateTypes: [
+        'major',
+      ],
+      dependencyDashboardApproval: true,
+    },
+    {
+      description: [
         'Auto-merge GitHub Actions for minor and patch',
       ],
       matchManagers: [
@@ -191,7 +200,6 @@
         '/sonarr/',
         '/radarr/',
         '/prowlarr/',
-        '/readarr/',
         '/sabnzbd/',
         '/qbittorrent/',
       ],
