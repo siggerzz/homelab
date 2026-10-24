@@ -12,6 +12,9 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
+  dependsOn:
+    - name: external-secrets-stores
+    - name: volsync
   path: ./kubernetes/apps/media/prowlarr/app
   prune: true
   sourceRef:

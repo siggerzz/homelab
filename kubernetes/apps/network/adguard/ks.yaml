@@ -13,6 +13,8 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
+    - name: external-secrets-stores
+    - name: volsync
     - name: openebs
     - name: traefik-internal
   path: ./kubernetes/apps/network/adguard/app
