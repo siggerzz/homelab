@@ -68,7 +68,6 @@
       ],
       automerge: true,
       automergeType: 'branch',
-      ignoreTests: true,
       matchUpdateTypes: [
         'minor',
         'patch',
@@ -86,7 +85,6 @@
       ],
       automerge: true,
       automergeType: 'branch',
-      ignoreTests: true,
     },
     {
       description: [
@@ -102,7 +100,6 @@
       ],
       automerge: true,
       automergeType: 'branch',
-      ignoreTests: true,
     },
     {
       description: [
@@ -143,7 +140,6 @@
       groupName: 'mise-tools',
       automerge: true,
       automergeType: 'branch',
-      ignoreTests: true,
     },
     {
       description: [
