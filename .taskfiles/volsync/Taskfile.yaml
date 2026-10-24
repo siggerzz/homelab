@@ -1,0 +1,60 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+tasks:
+
+  restore:
+    desc: Restore an app's PVC from its latest backup [NS=required] [RS=required] [APP=required] [PREVIOUS=0]
+    summary: |
+      Stops the app, restores the PVC behind ReplicationSource RS from kopia, then starts the app again.
+        NS        namespace of the app
+        RS        ReplicationSource name (the backed-up PVC has the same name)
+        APP       Flux Kustomization and HelmRelease name, e.g. sonarr
+        PREVIOUS  skip this many newest snapshots, e.g. 1 restores the one before the latest
+    cmds:
+      - flux --namespace flux-system suspend kustomization {{.APP}}
+      - flux --namespace {{.NS}} suspend helmrelease {{.APP}}
+      - kubectl --namespace {{.NS}} scale deployment,statefulset --selector app.kubernetes.io/name={{.APP}} --replicas 0
+      - kubectl --namespace {{.NS}} wait pod --selector app.kubernetes.io/name={{.APP}} --for delete --timeout=5m
+      - |
+        kubectl --namespace {{.NS}} get replicationsources {{.RS}} --output json \
+          | jq --arg previous "{{.PREVIOUS}}" --arg trigger "{{.TRIGGER}}" '{
+              apiVersion: "volsync.backube/v1alpha1",
+              kind: "ReplicationDestination",
+              metadata: {name: "\(.metadata.name)-restore", namespace: .metadata.namespace},
+              spec: {
+                trigger: {manual: $trigger},
+                kopia: {
+                  repository: .spec.kopia.repository,
+                  destinationPVC: .spec.sourcePVC,
+                  copyMethod: "Direct",
+                  enableFileDeletion: true,
+                  previous: ($previous | tonumber),
+                  cleanupCachePVC: true,
+                  cacheCapacity: .spec.kopia.cacheCapacity,
+                  cacheStorageClassName: .spec.kopia.cacheStorageClassName,
+                  cacheAccessModes: .spec.kopia.cacheAccessModes,
+                  moverVolumes: .spec.kopia.moverVolumes,
+                  moverSecurityContext: .spec.kopia.moverSecurityContext,
+                  sourceIdentity: {sourceName: .metadata.name, sourcePVCName: .spec.sourcePVC}
+                }
+              }
+            }' \
+          | kubectl apply --filename -
+      - kubectl --namespace {{.NS}} wait replicationdestinations {{.RS}}-restore --for=jsonpath='{.status.lastManualSync}'={{.TRIGGER}} --timeout=60m
+      - kubectl --namespace {{.NS}} get replicationdestinations {{.RS}}-restore --output jsonpath='{.status.latestMoverStatus.result}{"\n"}{.status.latestMoverStatus.logs}{"\n"}'
+      - kubectl --namespace {{.NS}} delete replicationdestinations {{.RS}}-restore
+      - flux --namespace {{.NS}} resume helmrelease {{.APP}}
+      - flux --namespace flux-system resume kustomization {{.APP}}
+    vars:
+      PREVIOUS: '{{.PREVIOUS | default "0"}}'
+      # Unique per run, so a re-run after a failure restores again instead of matching the old status
+      TRIGGER:
+        sh: echo "restore-$(date +%s)"
+    requires:
+      vars: [NS, RS, APP]
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which flux kubectl jq
+      - kubectl --namespace {{.NS}} get replicationsources {{.RS}}
