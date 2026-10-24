@@ -28,6 +28,12 @@ spec:
       runAsUser: ${VOLSYNC_UID:=1000}
       runAsGroup: ${VOLSYNC_GID:=1000}
       fsGroup: ${VOLSYNC_GID:=1000}
+    # Every rule set explicitly: kopia fills unset ones with its own defaults
+    # (10 latest, 48 hourly, 24 monthly, 3 annual)
     retain:
+      latest: 0
+      hourly: 0
       daily: 7
       weekly: 4
+      monthly: 6
+      yearly: 0
