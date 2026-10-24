@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: "Flux Local"
+
+on:
+  pull_request:
+    branches: ["main"]
+  # Renovate's branch automerges never open a PR, so test their branches on push
+  push:
+    branches: ["renovate/**"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Flux Local Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Run flux-local test
+        uses: docker://ghcr.io/allenporter/flux-local:v7.11.0
+        with:
+          args: >-
+            test
+            --all-namespaces
+            --enable-helm
+            --path /github/workspace/kubernetes/flux/cluster
+            --verbose
