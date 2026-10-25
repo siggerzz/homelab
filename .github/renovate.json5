@@ -180,6 +180,15 @@
     },
     {
       description: [
+        'Norish tags its Obscura build as <upstream version>-norish.<build>',
+      ],
+      matchPackageNames: [
+        'docker.io/norishapp/obscura',
+      ],
+      versioning: 'regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-norish\\.(?<build>\\d+)$',
+    },
+    {
+      description: [
         'Group media apps together',
       ],
       groupName: 'media-apps',

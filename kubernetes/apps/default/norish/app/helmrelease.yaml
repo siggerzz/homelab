@@ -1,0 +1,295 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: norish
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 5.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controllers:
+      norish:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/norishapp/norish
+              tag: v0.25.1-beta@sha256:f96ba007c7bdd7b6640f34c2ffbe63a647a2f9e2a291afdf666f895e7f6f168b
+            env:
+              AUTH_URL: "https://norish.${SECRET_DOMAIN}"
+              OBSCURA_ENDPOINT: ws://norish-obscura:9222
+              REDIS_URL: redis://localhost:6379
+              UPLOADS_DIR: /app/uploads
+              OIDC_NAME: Authentik
+              OIDC_ISSUER: "https://auth.${SECRET_DOMAIN}/application/o/norish/"
+              TZ: Europe/London
+            envFrom:
+              - secretRef:
+                  name: norish-secret
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: &port 3000
+                  periodSeconds: 30
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/health
+                    port: *port
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: *port
+                  periodSeconds: 10
+                  failureThreshold: 60
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+          valkey:
+            image:
+              repository: docker.io/valkey/valkey
+              tag: 9.1.2@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+      postgres:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        strategy: Recreate
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            fsGroup: 999
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: { type: RuntimeDefault }
+        containers:
+          app:
+            image:
+              repository: docker.io/library/postgres
+              tag: 17.7-bookworm@sha256:86e0b703649d7a792bd9243ee28afc9d8f7c6b2b5638077c9d6882d4d472bbfd
+            env:
+              POSTGRES_USER: norish
+              POSTGRES_DB: norish
+              PGDATA: /var/lib/postgresql/data/pgdata
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: norish-secret
+                    key: POSTGRES_PASSWORD
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 5432
+                  periodSeconds: 30
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: ["pg_isready", "-U", "norish", "-d", "norish"]
+                  periodSeconds: 10
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+      obscura:
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile: { type: RuntimeDefault }
+        containers:
+          app:
+            image:
+              repository: docker.io/norishapp/obscura
+              tag: 0.2.4-norish.2@sha256:5d19f81b45d499073e78bc5716bbcb5b5bcd3158a2a89f68651670d6ace03e83
+            env:
+              OBSCURA_CDP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: norish-secret
+                    key: OBSCURA_CDP_TOKEN
+            probes:
+              liveness: &obscuraProbes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 9222
+                  periodSeconds: 30
+              readiness: *obscuraProbes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+      backup:
+        type: cronjob
+        cronjob:
+          schedule: "30 1 * * *"
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+        pod:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            fsGroup: 1000
+            seccompProfile: { type: RuntimeDefault }
+        containers:
+          app:
+            image:
+              repository: docker.io/library/postgres
+              tag: 17.7-bookworm@sha256:86e0b703649d7a792bd9243ee28afc9d8f7c6b2b5638077c9d6882d4d472bbfd
+            command: ["sh", "-c"]
+            args:
+              - pg_dump -h norish-postgres -U norish -Fc norish > "/backups/norish-$(date +%a).dump"
+            env:
+              PGPASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: norish-secret
+                    key: PGPASSWORD
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        primary: true
+        controller: norish
+        ports:
+          http:
+            port: *port
+      postgres:
+        controller: postgres
+        ports:
+          postgres:
+            port: 5432
+      obscura:
+        controller: obscura
+        ports:
+          cdp:
+            port: 9222
+    ingress:
+      app:
+        className: internal
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |
+            ui:
+              hide-url: true
+              hide-hostname: true
+            conditions:
+              - "[STATUS] == 200"
+            interval: 5m
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/icon: mdi-chef-hat
+          gethomepage.dev/name: Norish
+          gethomepage.dev/group: Home
+        hosts:
+          - host: "norish.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+    persistence:
+      uploads:
+        existingClaim: norish
+        advancedMounts:
+          norish:
+            app:
+              - path: /app/uploads
+          backup:
+            app:
+              - path: /backups
+                subPath: db-backups
+      db:
+        existingClaim: norish-db
+        advancedMounts:
+          postgres:
+            app:
+              - path: /var/lib/postgresql/data
+      postgres-run:
+        type: emptyDir
+        advancedMounts:
+          postgres:
+            app:
+              - path: /var/run/postgresql
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          postgres:
+            app:
+              - path: /tmp
+          obscura:
+            app:
+              - path: /tmp
+      valkey-data:
+        type: emptyDir
+        advancedMounts:
+          norish:
+            valkey:
+              - path: /data
