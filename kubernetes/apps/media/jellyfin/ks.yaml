@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: jellyfin
       VOLSYNC_CLAIM: jellyfin-config
-      VOLSYNC_CAPACITY: 10Gi

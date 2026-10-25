@@ -19,12 +19,18 @@ spec:
     moverVolumes:
       - mountPath: repository
         volumeSource:
-          persistentVolumeClaim:
-            claimName: "${VOLSYNC_CLAIM}-repo"
+          nfs:
+            server: "${NAS_IP}"
+            path: /var/nfs/shared/k8s/volsync
     moverSecurityContext:
       runAsUser: ${VOLSYNC_UID:=1000}
       runAsGroup: ${VOLSYNC_GID:=1000}
       fsGroup: ${VOLSYNC_GID:=1000}
+    # Unset rules fall back to kopia defaults (24 monthly, 3 annual), so set every one
     retain:
+      latest: 0
+      hourly: 0
       daily: 7
       weekly: 4
+      monthly: 6
+      yearly: 0

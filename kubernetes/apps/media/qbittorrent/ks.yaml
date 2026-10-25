@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: qbittorrent
       VOLSYNC_CLAIM: qbittorrent
-      VOLSYNC_CAPACITY: 5Gi

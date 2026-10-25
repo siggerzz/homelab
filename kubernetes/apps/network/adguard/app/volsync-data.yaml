@@ -1,16 +1,4 @@
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: adguard-data-repo
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: nfs-volsync
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -31,12 +19,17 @@ spec:
     moverVolumes:
       - mountPath: repository
         volumeSource:
-          persistentVolumeClaim:
-            claimName: adguard-data-repo
+          nfs:
+            server: "${NAS_IP}"
+            path: /var/nfs/shared/k8s/volsync
     moverSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
     retain:
+      latest: 0
+      hourly: 0
       daily: 7
       weekly: 4
+      monthly: 6
+      yearly: 0

@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: mosquitto
       VOLSYNC_CLAIM: mosquitto-data
-      VOLSYNC_CAPACITY: 1Gi
