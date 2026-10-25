@@ -11,7 +11,6 @@ resources:
   - ./external-secrets/stores/ks.yaml
   - ./intel-gpu-plugin/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./nfs-provisioner/ks.yaml
   - ./node-feature-discovery/ks.yaml
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
