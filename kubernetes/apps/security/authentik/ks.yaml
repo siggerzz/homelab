@@ -10,8 +10,11 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
   dependsOn:
     - name: external-secrets-stores
+    - name: volsync
   path: ./kubernetes/apps/security/authentik/app
   prune: true
   sourceRef:
@@ -20,3 +23,7 @@ spec:
   wait: false
   interval: 30m
   timeout: 5m
+  postBuild:
+    substitute:
+      APP: authentik
+      VOLSYNC_CLAIM: authentik-backup
