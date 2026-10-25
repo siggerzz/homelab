@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: authentik
-      version: 2026.5.6
+      version: 2026.8.5
       sourceRef:
         kind: HelmRepository
         name: authentik
@@ -50,6 +50,8 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
+          labels:
+            release: kube-prometheus-stack
       resources:
         requests:
           cpu: 50m
@@ -74,6 +76,8 @@ spec:
       enabled: true
       global:
         defaultStorageClass: openebs-hostpath
+      image:
+        tag: 17.11-bookworm
       auth:
         existingSecret: authentik-secret
         secretKeys:
