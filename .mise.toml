@@ -7,7 +7,7 @@ TASK_X_MAP_VARIABLES = 0
 
 [tools]
 # Runs flux-local locally via uvx
-uv = "0.13.4"
+uv = "0.13.5"
 # Operations tools
 "aqua:budimanjojo/talhelper" = "3.1.17"
 "aqua:cloudflare/cloudflared" = "2026.10.3"
