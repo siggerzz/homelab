@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: loki
-      version: 6.55.0
+      version: 7.3.0
       sourceRef:
         kind: HelmRepository
         name: grafana
@@ -65,8 +65,8 @@ spec:
         enabled: false
         grafanaAgent:
           installOperator: false
-      lokiCanary:
-        enabled: false
+    lokiCanary:
+      enabled: false
     gateway:
       enabled: true
       replicas: 1
