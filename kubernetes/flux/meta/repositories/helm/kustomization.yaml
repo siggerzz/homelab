@@ -13,7 +13,6 @@ resources:
   - ./grafana.yaml
   - ./jetstack.yaml
   - ./metrics-server.yaml
-  - ./nfs-provisioner.yaml
   - ./node-feature-discovery.yaml
   - ./openebs.yaml
   - ./prometheus-community.yaml
