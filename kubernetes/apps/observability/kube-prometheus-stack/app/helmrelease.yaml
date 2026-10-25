@@ -102,3 +102,19 @@ spec:
                 for: 15m
                 labels:
                   severity: critical
+      unifi-rules:
+        groups:
+          - name: unifi
+            rules:
+              # The 2026-10-24 outage: the WAN SFP+ module received corrupted frames for an hour
+              # until the UDM rebooted. Normally this counter never moves.
+              - alert: UnifiWanReceiveErrors
+                annotations:
+                  summary: >-
+                    {{ $labels.name }} WAN port {{ $labels.port }} received {{ $value | humanize }} corrupted
+                    frames in 10 minutes, so internet is likely degraded. Check the SFP+ module and cable;
+                    a UDM reboot clears it.
+                expr: increase(unpoller_device_wan_receive_errors_total[10m]) > 100
+                for: 5m
+                labels:
+                  severity: critical
