@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: bazarr
       VOLSYNC_CLAIM: bazarr
-      VOLSYNC_CAPACITY: 2Gi

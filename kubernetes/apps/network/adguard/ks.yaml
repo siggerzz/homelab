@@ -29,4 +29,3 @@ spec:
     substitute:
       APP: adguard
       VOLSYNC_CLAIM: adguard-config
-      VOLSYNC_CAPACITY: 1Gi

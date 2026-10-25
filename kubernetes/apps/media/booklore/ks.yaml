@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: booklore
       VOLSYNC_CLAIM: booklore-config
-      VOLSYNC_CAPACITY: 5Gi

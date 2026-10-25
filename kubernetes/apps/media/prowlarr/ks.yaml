@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: prowlarr
       VOLSYNC_CLAIM: prowlarr
-      VOLSYNC_CAPACITY: 5Gi

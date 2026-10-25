@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: sabnzbd
       VOLSYNC_CLAIM: sabnzbd
-      VOLSYNC_CAPACITY: 10Gi

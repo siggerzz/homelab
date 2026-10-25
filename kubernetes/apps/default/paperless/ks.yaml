@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: paperless
       VOLSYNC_CLAIM: paperless
-      VOLSYNC_CAPACITY: 5Gi

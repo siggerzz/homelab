@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: sonarr
       VOLSYNC_CLAIM: sonarr
-      VOLSYNC_CAPACITY: 5Gi

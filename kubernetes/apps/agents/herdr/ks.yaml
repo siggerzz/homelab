@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: herdr
       VOLSYNC_CLAIM: herdr-home
-      VOLSYNC_CAPACITY: 50Gi

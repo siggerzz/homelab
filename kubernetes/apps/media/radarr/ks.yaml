@@ -27,4 +27,3 @@ spec:
     substitute:
       APP: radarr
       VOLSYNC_CLAIM: radarr
-      VOLSYNC_CAPACITY: 5Gi
