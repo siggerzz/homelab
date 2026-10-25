@@ -46,7 +46,9 @@ tasks:
       - kubectl --namespace {{.NS}} get replicationdestinations {{.RS}}-restore --output jsonpath='{.status.latestMoverStatus.result}{"\n"}{.status.latestMoverStatus.logs}{"\n"}'
       - kubectl --namespace {{.NS}} delete replicationdestinations {{.RS}}-restore
       - flux --namespace {{.NS}} resume helmrelease {{.APP}}
+      - flux --namespace {{.NS}} reconcile helmrelease {{.APP}} --force
       - flux --namespace flux-system resume kustomization {{.APP}}
+      - kubectl --namespace {{.NS}} rollout status deployment,statefulset --selector app.kubernetes.io/name={{.APP}} --timeout=5m
     vars:
       PREVIOUS: '{{.PREVIOUS | default "0"}}'
       # Unique per run, so a re-run after a failure restores again instead of matching the old status
