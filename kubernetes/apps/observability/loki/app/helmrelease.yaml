@@ -49,9 +49,11 @@ spec:
           memory: 1Gi
         requests:
           cpu: 100m
-          memory: 256Mi
+          memory: 512Mi
     chunksCache:
-      allocatedMemory: 1024
+      allocatedMemory: 256
+    resultsCache:
+      allocatedMemory: 64
     backend:
       replicas: 0
     read:
