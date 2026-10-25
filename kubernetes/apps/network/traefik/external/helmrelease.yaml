@@ -25,6 +25,9 @@ spec:
     providers:
       kubernetesIngress:
         enabled: true
+        # Both IngressClasses share the traefik.io/ingress-controller controller, so without this
+        # each instance serves every Ingress and overwrites the other's status IP
+        ingressClass: external
       kubernetesCRD:
         enabled: true
     # --- API / Dashboard ---
