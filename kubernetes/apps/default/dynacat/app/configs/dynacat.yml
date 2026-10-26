@@ -10,6 +10,10 @@ theme:
   disable-picker: true
   custom-css-file: /assets/vesper.css
 
+document:
+  head: |
+    <script src="/assets/view-filter.js"></script>
+
 branding:
   hide-footer: true
   hide-logo: true
@@ -17,6 +21,34 @@ branding:
 pages:
   - name: Home
     hide-desktop-navigation: true
+    head-widgets:
+      - type: html
+        hide-header: true
+        css-class: view-filter-widget
+        source: |
+          <div class="view-filter" role="group" aria-label="Show widgets">
+            <button type="button" data-view-button="all">All</button>
+            <button type="button" data-view-button="productivity">Productivity</button>
+            <button type="button" data-view-button="social">Social</button>
+          </div>
+
+      - type: videos
+        css-class: social
+        title: YouTube
+        limit: 12
+        channels:
+          - UCXuqSBlHAE6Xw-yeJA0Tunw
+          - UCcLYOTz3ct6_lk9iLToxxAw
+          - UC2FZQeaJkpnO6IMkQglvPsg
+          - UCpp3cHR9TWVyXqL1AVw4XkA
+          - UCsBjURrPoezykLs9EqgamOA
+          - UCUyeluBRhGPCW4rPe_UvBZQ
+          - UCyU5wkjgQYGRB0hIHMwm2Sg
+          - UCoebwHSTvwalADTJhps0emA
+          - UCFhXFikryT4aFcLkLw2LBLA
+          - UCTROtIF7bDJc5klVGRzsMQw
+
+
     columns:
       - size: small
         widgets:
@@ -55,6 +87,61 @@ pages:
                     url: https://bazarr.${SECRET_DOMAIN}
                   - title: Shelfmark
                     url: https://shelfmark.${SECRET_DOMAIN}
+
+
+          - type: markets
+            css-class: social
+            markets:
+              - symbol: VWRP.L
+                name: FTSE All-World (Acc)
+              - symbol: VWRL.L
+                name: FTSE All-World (Dist)
+              - symbol: VFEG.L
+                name: FTSE Emerging Markets (Acc)
+
+          - type: custom-api
+            css-class: social
+            title: Next Race
+            title-url: https://www.formula1.com/en/racing
+            cache: 1h
+            url: https://api.jolpi.ca/ergast/f1/current/next.json
+            template: |
+              {{ $r := index (.JSON.Array "MRData.RaceTable.Races") 0 }}
+              <div class="flex flex-column gap-10">
+                <div>
+                  <p class="size-h5">Round {{ $r.String "round" }} · {{ parseTime "DateOnly" ($r.String "date") | formatTime "Mon 2 Jan" }}</p>
+                  <p class="color-highlight size-h3">{{ $r.String "raceName" }}</p>
+                </div>
+                <ul class="list list-gap-4 size-h5">
+                  {{ if $r.Exists "Sprint" }}
+                  <li class="flex justify-between"><span>Sprint</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Sprint.date") ($r.String "Sprint.time")) }}></span></li>
+                  {{ end }}
+                  <li class="flex justify-between"><span>Qualifying</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Qualifying.date") ($r.String "Qualifying.time")) }}></span></li>
+                  <li class="flex justify-between color-primary"><span>Race</span><span {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "date") ($r.String "time")) }}></span></li>
+                </ul>
+                <ul class="size-h6 list-horizontal-text">
+                  <li>{{ $r.String "Circuit.circuitName" }}</li>
+                  <li>{{ $r.String "Circuit.Location.country" }}</li>
+                </ul>
+              </div>
+
+          - type: custom-api
+            css-class: social
+            title: Drivers Standings
+            cache: 6h
+            url: https://api.jolpi.ca/ergast/f1/current/driverstandings.json
+            template: |
+              <ul class="list collapsible-container" data-collapse-after="5">
+                {{ range $i, $v := .JSON.Array "MRData.StandingsTable.StandingsLists.0.DriverStandings" }}
+                <li class="flex items-center {{ if eq $i 0 }}color-primary{{ else if eq $i 1 }}color-highlight{{ end }}">
+                  <div class="grow min-width-0">
+                    <span>{{ .String "position" }}. {{ .String "Driver.code" }}</span>
+                    <span class="size-h6">({{ .String "Constructors.0.name" }})</span>
+                  </div>
+                  <span class="shrink-0 text-right">{{ .String "points" }}</span>
+                </li>
+                {{ end }}
+              </ul>
 
       - size: full
         widgets:
@@ -139,6 +226,33 @@ pages:
                   "/var":
                     name: Disk
                     hide: false
+
+
+          - type: group
+            css-class: social
+            widgets:
+              - type: rss
+                title: BBC News
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://feeds.bbci.co.uk/news/rss.xml
+              - type: rss
+                title: F1
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
+              - type: rss
+                title: The Verge
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://www.theverge.com/rss/index.xml
+              - type: hacker-news
+                limit: 10
+                collapse-after: 5
+
 
       - size: small
         widgets:
@@ -268,102 +382,3 @@ pages:
               - goauthentik/authentik
               - paperless-ngx/paperless-ngx
               - Panonim/dynacat
-
-  - name: Feeds
-    slug: feeds
-    hide-from-navigation: true
-    head-widgets:
-      - type: videos
-        title: YouTube
-        limit: 12
-        channels:
-          - UCXuqSBlHAE6Xw-yeJA0Tunw
-          - UCcLYOTz3ct6_lk9iLToxxAw
-          - UC2FZQeaJkpnO6IMkQglvPsg
-          - UCpp3cHR9TWVyXqL1AVw4XkA
-          - UCsBjURrPoezykLs9EqgamOA
-          - UCUyeluBRhGPCW4rPe_UvBZQ
-          - UCyU5wkjgQYGRB0hIHMwm2Sg
-          - UCoebwHSTvwalADTJhps0emA
-          - UCFhXFikryT4aFcLkLw2LBLA
-          - UCTROtIF7bDJc5klVGRzsMQw
-
-    columns:
-      - size: full
-        widgets:
-          - type: group
-            widgets:
-              - type: rss
-                title: BBC News
-                limit: 10
-                collapse-after: 5
-                feeds:
-                  - url: https://feeds.bbci.co.uk/news/rss.xml
-              - type: rss
-                title: F1
-                limit: 10
-                collapse-after: 5
-                feeds:
-                  - url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
-              - type: rss
-                title: The Verge
-                limit: 10
-                collapse-after: 5
-                feeds:
-                  - url: https://www.theverge.com/rss/index.xml
-              - type: hacker-news
-                limit: 10
-                collapse-after: 5
-
-      - size: small
-        widgets:
-          - type: markets
-            markets:
-              - symbol: VWRP.L
-                name: FTSE All-World (Acc)
-              - symbol: VWRL.L
-                name: FTSE All-World (Dist)
-              - symbol: VFEG.L
-                name: FTSE Emerging Markets (Acc)
-
-          - type: custom-api
-            title: Next Race
-            title-url: https://www.formula1.com/en/racing
-            cache: 1h
-            url: https://api.jolpi.ca/ergast/f1/current/next.json
-            template: |
-              {{ $r := index (.JSON.Array "MRData.RaceTable.Races") 0 }}
-              <div class="flex flex-column gap-10">
-                <div>
-                  <p class="size-h5">Round {{ $r.String "round" }} · {{ parseTime "DateOnly" ($r.String "date") | formatTime "Mon 2 Jan" }}</p>
-                  <p class="color-highlight size-h3">{{ $r.String "raceName" }}</p>
-                </div>
-                <ul class="list list-gap-4 size-h5">
-                  {{ if $r.Exists "Sprint" }}
-                  <li class="flex justify-between"><span>Sprint</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Sprint.date") ($r.String "Sprint.time")) }}></span></li>
-                  {{ end }}
-                  <li class="flex justify-between"><span>Qualifying</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Qualifying.date") ($r.String "Qualifying.time")) }}></span></li>
-                  <li class="flex justify-between color-primary"><span>Race</span><span {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "date") ($r.String "time")) }}></span></li>
-                </ul>
-                <ul class="size-h6 list-horizontal-text">
-                  <li>{{ $r.String "Circuit.circuitName" }}</li>
-                  <li>{{ $r.String "Circuit.Location.country" }}</li>
-                </ul>
-              </div>
-
-          - type: custom-api
-            title: Drivers Standings
-            cache: 6h
-            url: https://api.jolpi.ca/ergast/f1/current/driverstandings.json
-            template: |
-              <ul class="list collapsible-container" data-collapse-after="5">
-                {{ range $i, $v := .JSON.Array "MRData.StandingsTable.StandingsLists.0.DriverStandings" }}
-                <li class="flex items-center {{ if eq $i 0 }}color-primary{{ else if eq $i 1 }}color-highlight{{ end }}">
-                  <div class="grow min-width-0">
-                    <span>{{ .String "position" }}. {{ .String "Driver.code" }}</span>
-                    <span class="size-h6">({{ .String "Constructors.0.name" }})</span>
-                  </div>
-                  <span class="shrink-0 text-right">{{ .String "points" }}</span>
-                </li>
-                {{ end }}
-              </ul>

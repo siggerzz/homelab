@@ -99,6 +99,9 @@ spec:
           - path: /app/assets/vesper.css
             subPath: vesper.css
             readOnly: true
+          - path: /app/assets/view-filter.js
+            subPath: view-filter.js
+            readOnly: true
       cache:
         type: emptyDir
         globalMounts:

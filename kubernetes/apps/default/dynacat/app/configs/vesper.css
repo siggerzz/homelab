@@ -33,3 +33,50 @@ textarea {
 .widget-header {
   padding-inline: 0;
 }
+
+.view-filter {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.view-filter button {
+  font: inherit;
+  font-size: var(--font-size-h5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-base);
+  background: var(--color-widget-background);
+  border: 1px solid var(--color-widget-content-border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+}
+
+.view-filter button:hover {
+  color: var(--color-text-highlight);
+}
+
+html[data-view="all"] [data-view-button="all"],
+html[data-view="productivity"] [data-view-button="productivity"],
+html[data-view="social"] [data-view-button="social"] {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+html[data-view="productivity"] .widget.social,
+html[data-view="social"] .widget:not(.social, .social .widget, .view-filter-widget),
+html[data-view="social"] .page-column:not(:has(.widget.social)) {
+  display: none;
+}
+
+.page-column,
+.head-widgets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--widget-gap);
+}
+
+.page-column > .widget + .widget,
+.head-widgets > .widget + .widget {
+  margin-top: 0;
+}

@@ -10,6 +10,7 @@ configMapGenerator:
     files:
       - ./configs/dynacat.yml
       - ./configs/vesper.css
+      - ./configs/view-filter.js
     options:
       annotations:
         kustomize.toolkit.fluxcd.io/substitute: disabled
