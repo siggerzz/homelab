@@ -5,10 +5,6 @@ metadata:
   name: traefik-internal-dashboard
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: security-authentik@kubernetescrd
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/icon: traefik
-    gethomepage.dev/name: Traefik Internal
-    gethomepage.dev/group: Network
 spec:
   ingressClassName: internal
   rules:

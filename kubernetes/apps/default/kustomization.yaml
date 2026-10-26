@@ -3,7 +3,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./homepage/ks.yaml
+  - ./dynacat/ks.yaml
   - ./namespace.yaml
   - ./norish/ks.yaml
   - ./paperless/ks.yaml

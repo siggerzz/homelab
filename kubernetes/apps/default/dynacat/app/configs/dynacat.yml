@@ -1,0 +1,359 @@
+server:
+  allow-editing: false
+
+theme:
+  background-color: 0 0 6
+  primary-color: 27 100 80
+  positive-color: 164 100 80
+  negative-color: 0 100 75
+  contrast-multiplier: 1.2
+  disable-picker: true
+  custom-css-file: /assets/vesper.css
+
+document:
+  head: |
+    <script src="/assets/view-filter.js"></script>
+
+branding:
+  hide-footer: true
+  hide-logo: true
+
+pages:
+  - name: Home
+    hide-desktop-navigation: true
+    head-widgets:
+      - type: html
+        hide-header: true
+        css-class: view-filter-widget
+        source: |
+          <div class="view-filter" role="group" aria-label="Show widgets">
+            <button type="button" data-view-button="all">All</button>
+            <button type="button" data-view-button="productivity">Productivity</button>
+            <button type="button" data-view-button="social">Social</button>
+          </div>
+
+      - type: videos
+        css-class: social
+        title: YouTube
+        limit: 12
+        channels:
+          - UCXuqSBlHAE6Xw-yeJA0Tunw
+          - UCcLYOTz3ct6_lk9iLToxxAw
+          - UC2FZQeaJkpnO6IMkQglvPsg
+          - UCpp3cHR9TWVyXqL1AVw4XkA
+          - UCsBjURrPoezykLs9EqgamOA
+          - UCUyeluBRhGPCW4rPe_UvBZQ
+          - UCyU5wkjgQYGRB0hIHMwm2Sg
+          - UCoebwHSTvwalADTJhps0emA
+          - UCFhXFikryT4aFcLkLw2LBLA
+          - UCTROtIF7bDJc5klVGRzsMQw
+
+
+    columns:
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+
+          - type: calendar
+            first-day-of-week: monday
+
+          - type: weather
+            location: Bristol, United Kingdom
+            units: metric
+            hour-format: 24h
+
+          - type: bookmarks
+            groups:
+              - title: Homelab
+                links:
+                  - title: GitHub
+                    url: https://github.com/siggerzz/homelab
+                  - title: Cloudflare
+                    url: https://dash.cloudflare.com
+                  - title: UniFi
+                    url: https://unifi.ui.com
+                  - title: Infisical
+                    url: https://app.infisical.com
+
+
+          - type: markets
+            css-class: social
+            markets:
+              - symbol: VWRP.L
+                name: FTSE All-World (Acc)
+              - symbol: VWRL.L
+                name: FTSE All-World (Dist)
+              - symbol: VFEG.L
+                name: FTSE Emerging Markets (Acc)
+
+          - type: custom-api
+            css-class: social
+            title: Next Race
+            title-url: https://www.formula1.com/en/racing
+            cache: 1h
+            url: https://api.jolpi.ca/ergast/f1/current/next.json
+            template: |
+              {{ $r := index (.JSON.Array "MRData.RaceTable.Races") 0 }}
+              <div class="flex flex-column gap-10">
+                <div>
+                  <p class="size-h5">Round {{ $r.String "round" }} · {{ parseTime "DateOnly" ($r.String "date") | formatTime "Mon 2 Jan" }}</p>
+                  <p class="color-highlight size-h3">{{ $r.String "raceName" }}</p>
+                </div>
+                <ul class="list list-gap-4 size-h5">
+                  {{ if $r.Exists "Sprint" }}
+                  <li class="flex justify-between"><span>Sprint</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Sprint.date") ($r.String "Sprint.time")) }}></span></li>
+                  {{ end }}
+                  <li class="flex justify-between"><span>Qualifying</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Qualifying.date") ($r.String "Qualifying.time")) }}></span></li>
+                  <li class="flex justify-between color-primary"><span>Race</span><span {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "date") ($r.String "time")) }}></span></li>
+                </ul>
+                <ul class="size-h6 list-horizontal-text">
+                  <li>{{ $r.String "Circuit.circuitName" }}</li>
+                  <li>{{ $r.String "Circuit.Location.country" }}</li>
+                </ul>
+              </div>
+
+          - type: custom-api
+            css-class: social
+            title: Drivers Standings
+            cache: 6h
+            url: https://api.jolpi.ca/ergast/f1/current/driverstandings.json
+            template: |
+              <ul class="list collapsible-container" data-collapse-after="5">
+                {{ range $i, $v := .JSON.Array "MRData.StandingsTable.StandingsLists.0.DriverStandings" }}
+                <li class="flex items-center {{ if eq $i 0 }}color-primary{{ else if eq $i 1 }}color-highlight{{ end }}">
+                  <div class="grow min-width-0">
+                    <span>{{ .String "position" }}. {{ .String "Driver.code" }}</span>
+                    <span class="size-h6">({{ .String "Constructors.0.name" }})</span>
+                  </div>
+                  <span class="shrink-0 text-right">{{ .String "points" }}</span>
+                </li>
+                {{ end }}
+              </ul>
+
+      - size: full
+        widgets:
+          - type: search
+            search-engine: google
+            autofocus: true
+
+          - type: split-column
+            max-columns: 3
+            widgets:
+              - type: monitor
+                title: Home
+                style: compact
+                cache: 1m
+                sites:
+                  - title: Home Assistant
+                    url: https://hass.${SECRET_DOMAIN}
+                  - title: Zigbee2MQTT
+                    url: https://zigbee.${SECRET_DOMAIN}
+                  - title: Paperless
+                    url: https://paperless.${SECRET_DOMAIN}
+                  - title: Norish
+                    url: https://norish.${SECRET_DOMAIN}
+
+              - type: monitor
+                title: Infrastructure
+                style: compact
+                cache: 1m
+                sites:
+                  - title: Grafana
+                    url: https://grafana.${SECRET_DOMAIN}
+                  - title: Alertmanager
+                    url: https://alertmanager.${SECRET_DOMAIN}
+                  - title: Gatus
+                    url: https://status.siggerzz.io
+                  - title: AdGuard Home
+                    url: https://adguard.${SECRET_DOMAIN}
+                  - title: Authentik
+                    url: https://auth.${SECRET_DOMAIN}
+
+              - type: monitor
+                title: Media
+                style: compact
+                cache: 1m
+                sites:
+                  - title: Jellyfin
+                    url: https://jellyfin.${SECRET_DOMAIN}
+                  - title: Seerr
+                    url: https://seerr.${SECRET_DOMAIN}
+                  - title: Audiobookshelf
+                    url: https://audiobookshelf.${SECRET_DOMAIN}
+                  - title: BookLore
+                    url: https://booklore.${SECRET_DOMAIN}
+                  - title: Sonarr
+                    url: https://sonarr.${SECRET_DOMAIN}
+                  - title: Radarr
+                    url: https://radarr.${SECRET_DOMAIN}
+
+          - type: server-stats
+            servers:
+              - type: node-exporter
+                name: glados-c01
+                url: http://192.168.10.11:9100
+                hide-mountpoints-by-default: true
+                mountpoints:
+                  "/var":
+                    name: Disk
+                    hide: false
+              - type: node-exporter
+                name: glados-w01
+                url: http://192.168.10.12:9100
+                hide-mountpoints-by-default: true
+                mountpoints:
+                  "/var":
+                    name: Disk
+                    hide: false
+              - type: node-exporter
+                name: glados-w02
+                url: http://192.168.10.13:9100
+                hide-mountpoints-by-default: true
+                mountpoints:
+                  "/var":
+                    name: Disk
+                    hide: false
+
+
+          - type: group
+            css-class: social
+            widgets:
+              - type: rss
+                title: BBC News
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://feeds.bbci.co.uk/news/rss.xml
+              - type: rss
+                title: F1
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
+              - type: rss
+                title: The Verge
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://www.theverge.com/rss/index.xml
+              - type: hacker-news
+                limit: 10
+                collapse-after: 5
+
+
+      - size: small
+        widgets:
+          - type: custom-api
+            title: Alerts
+            title-url: https://alertmanager.${SECRET_DOMAIN}
+            cache: 1m
+            url: http://alertmanager-operated.observability.svc.cluster.local:9093/api/v2/alerts?active=true&silenced=false&inhibited=false
+            template: |
+              {{ $firing := 0.0 }}
+              {{ range .JSON.Array "" }}
+              {{ if not (or (eq (.String "labels.alertname") "Watchdog") (eq (.String "labels.alertname") "InfoInhibitor")) }}
+              {{ $firing = add $firing 1.0 }}
+              {{ end }}
+              {{ end }}
+              {{ if eq $firing 0.0 }}{{ hide }}{{ end }}
+              <ul class="list list-gap-10 collapsible-container" data-collapse-after="5">
+                {{ range .JSON.Array "" }}
+                {{ if not (or (eq (.String "labels.alertname") "Watchdog") (eq (.String "labels.alertname") "InfoInhibitor")) }}
+                <li>
+                  <p class="size-title-dynamic {{ if eq (.String "labels.severity") "critical" }}color-negative{{ else }}color-highlight{{ end }}">{{ .String "labels.alertname" }}</p>
+                  <ul class="list-horizontal-text">
+                    <li>{{ .String "labels.severity" }}</li>
+                    {{ if .Exists "labels.namespace" }}<li>{{ .String "labels.namespace" }}</li>{{ end }}
+                    <li {{ parseRelativeTime "rfc3339" (.String "startsAt") }}></li>
+                  </ul>
+                  {{ if .Exists "annotations.summary" }}<p class="size-h6">{{ .String "annotations.summary" }}</p>{{ end }}
+                </li>
+                {{ end }}
+                {{ end }}
+              </ul>
+
+          - type: custom-api
+            title: Open PRs
+            title-url: https://github.com/siggerzz/homelab/pulls
+            cache: 15m
+            url: https://api.github.com/repos/siggerzz/homelab/pulls?state=open&per_page=10
+            headers:
+              Authorization: Bearer ${GITHUB_TOKEN}
+            template: |
+              <ul class="list list-gap-10 collapsible-container" data-collapse-after="5">
+                {{ range .JSON.Array "" }}
+                <li>
+                  <a class="size-title-dynamic color-highlight text-truncate block" href="{{ .String "html_url" }}" target="_blank" rel="noreferrer">{{ .String "title" }}</a>
+                  <ul class="list-horizontal-text">
+                    <li>#{{ .Int "number" }}</li>
+                    <li>{{ .String "user.login" }}</li>
+                    <li {{ .String "created_at" | parseTime "rfc3339" | toRelativeTime }}></li>
+                  </ul>
+                </li>
+                {{ else }}
+                <p>No open PRs</p>
+                {{ end }}
+              </ul>
+
+          - type: custom-api
+            title: Network
+            cache: 1m
+            url: ${UNIFI_HOST}/proxy/network/api/s/default/stat/health
+            allow-insecure: true
+            headers:
+              X-API-KEY: ${UNIFI_API_KEY}
+              Accept: application/json
+            template: |
+              <ul class="list list-gap-10">
+                {{ range .JSON.Array "data" }}
+                {{ if eq (.String "subsystem") "www" }}
+                <li class="flex justify-between items-center">
+                  <span class="color-highlight">Internet</span>
+                  {{ if eq (.String "status") "ok" }}
+                  <span class="color-positive">up{{ if .Exists "latency" }} · {{ .Int "latency" }}ms{{ end }}</span>
+                  {{ else }}
+                  <span class="color-negative">{{ .String "status" }}</span>
+                  {{ end }}
+                </li>
+                {{ end }}
+                {{ if eq (.String "subsystem") "vpn" }}
+                <li class="flex justify-between items-center">
+                  <span class="color-highlight">WireGuard</span>
+                  {{ if .Bool "remote_user_enabled" }}
+                  <span class="{{ if gt (.Int "remote_user_num_active") 0 }}color-positive{{ end }}">{{ .Int "remote_user_num_active" }} connected</span>
+                  {{ else }}
+                  <span class="color-negative">off</span>
+                  {{ end }}
+                </li>
+                {{ end }}
+                {{ end }}
+              </ul>
+
+          - type: custom-api
+            title: Power
+            cache: 1m
+            url: http://prometheus-operated.observability.svc.cluster.local:9090/api/v1/query
+            parameters:
+              query: label_replace(tapo_p110_power_consumption_w / 1000, "k", "now", "", "") or label_replace(tapo_p110_today_energy_wh / 1000, "k", "today", "", "") or label_replace(tapo_p110_month_energy_wh / 1000, "k", "month", "", "")
+            template: |
+              <div class="flex justify-between text-center">
+                {{ range .JSON.Array "data.result" }}{{ if eq (.String "metric.k") "now" }}
+                <div><div class="color-highlight size-h3">{{ printf "%.0f" (.Float "value.1") }} W</div><div class="size-h6">NOW</div></div>
+                {{ end }}{{ end }}
+                {{ range .JSON.Array "data.result" }}{{ if eq (.String "metric.k") "today" }}
+                <div><div class="color-highlight size-h3">{{ printf "%.1f" (.Float "value.1") }} kWh</div><div class="size-h6">TODAY</div></div>
+                {{ end }}{{ end }}
+                {{ range .JSON.Array "data.result" }}{{ if eq (.String "metric.k") "month" }}
+                <div><div class="color-highlight size-h3">{{ printf "%.0f" (.Float "value.1") }} kWh</div><div class="size-h6">MONTH</div></div>
+                {{ end }}{{ end }}
+              </div>
+
+          - type: speedtest
+
+          - type: dns-stats
+            service: adguard
+            url: http://adguard-app.network.svc.cluster.local:3000
+            username: ${ADGUARD_USERNAME}
+            password: ${ADGUARD_PASSWORD}
+            hour-format: 24h

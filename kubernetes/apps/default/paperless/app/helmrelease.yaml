@@ -116,10 +116,6 @@ spec:
             conditions:
               - "[STATUS] == 200"
             interval: 5m
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: paperless-ngx
-          gethomepage.dev/name: Paperless
-          gethomepage.dev/group: Documents
         hosts:
           - host: "paperless.${SECRET_DOMAIN}"
             paths:

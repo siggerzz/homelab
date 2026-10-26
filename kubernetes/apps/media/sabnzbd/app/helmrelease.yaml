@@ -82,13 +82,6 @@ spec:
               - "[STATUS] == 200"
             interval: 5m
           traefik.ingress.kubernetes.io/router.middlewares: security-authentik@kubernetescrd
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: sabnzbd
-          gethomepage.dev/name: Sabnzbd
-          gethomepage.dev/group: Downloaders
-          gethomepage.dev/widget.type: sabnzbd
-          gethomepage.dev/widget.url: http://sabnzbd.media.svc.cluster.local:80
-          gethomepage.dev/widget.key: '{{ "{{HOMEPAGE_VAR_SABNZBD_API_KEY}}" }}'
         hosts:
           - host: "sabnzbd.${SECRET_DOMAIN}"
             paths:

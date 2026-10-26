@@ -118,7 +118,6 @@
         'ghcr.io/booklore-app/booklore',
         'ghcr.io/calibrain/shelfmark',
         'ghcr.io/coder/code-server',
-        'ghcr.io/gethomepage/homepage',
         'ghcr.io/seerr-team/seerr',
         'ghcr.io/twin/gatus',
         'ghcr.io/unpoller/unpoller',
