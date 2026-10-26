@@ -29,3 +29,7 @@ textarea {
 .content-bounds {
   max-width: 1360px;
 }
+
+.widget-header {
+  padding-inline: 0;
+}
