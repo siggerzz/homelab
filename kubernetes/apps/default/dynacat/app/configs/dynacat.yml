@@ -75,18 +75,6 @@ pages:
                     url: https://unifi.ui.com
                   - title: Infisical
                     url: https://app.infisical.com
-              - title: Media
-                links:
-                  - title: Prowlarr
-                    url: https://prowlarr.${SECRET_DOMAIN}
-                  - title: SABnzbd
-                    url: https://sabnzbd.${SECRET_DOMAIN}
-                  - title: qBittorrent
-                    url: https://qbittorrent.${SECRET_DOMAIN}
-                  - title: Bazarr
-                    url: https://bazarr.${SECRET_DOMAIN}
-                  - title: Shelfmark
-                    url: https://shelfmark.${SECRET_DOMAIN}
 
 
           - type: markets
@@ -369,16 +357,3 @@ pages:
             username: ${ADGUARD_USERNAME}
             password: ${ADGUARD_PASSWORD}
             hour-format: 24h
-
-          - type: releases
-            show-source-icon: true
-            token: ${GITHUB_TOKEN}
-            repositories:
-              - siderolabs/talos
-              - kubernetes/kubernetes
-              - fluxcd/flux2
-              - cilium/cilium
-              - home-assistant/core
-              - goauthentik/authentik
-              - paperless-ngx/paperless-ngx
-              - Panonim/dynacat
