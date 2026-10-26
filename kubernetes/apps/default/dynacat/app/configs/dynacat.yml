@@ -143,6 +143,35 @@ pages:
       - size: small
         widgets:
           - type: custom-api
+            title: Alerts
+            title-url: https://alertmanager.${SECRET_DOMAIN}
+            cache: 1m
+            url: http://alertmanager-operated.observability.svc.cluster.local:9093/api/v2/alerts?active=true&silenced=false&inhibited=false
+            template: |
+              {{ $firing := 0.0 }}
+              {{ range .JSON.Array "" }}
+              {{ if not (or (eq (.String "labels.alertname") "Watchdog") (eq (.String "labels.alertname") "InfoInhibitor")) }}
+              {{ $firing = add $firing 1.0 }}
+              {{ end }}
+              {{ end }}
+              {{ if eq $firing 0.0 }}{{ hide }}{{ end }}
+              <ul class="list list-gap-10 collapsible-container" data-collapse-after="5">
+                {{ range .JSON.Array "" }}
+                {{ if not (or (eq (.String "labels.alertname") "Watchdog") (eq (.String "labels.alertname") "InfoInhibitor")) }}
+                <li>
+                  <p class="size-title-dynamic {{ if eq (.String "labels.severity") "critical" }}color-negative{{ else }}color-highlight{{ end }}">{{ .String "labels.alertname" }}</p>
+                  <ul class="list-horizontal-text">
+                    <li>{{ .String "labels.severity" }}</li>
+                    {{ if .Exists "labels.namespace" }}<li>{{ .String "labels.namespace" }}</li>{{ end }}
+                    <li {{ parseRelativeTime "rfc3339" (.String "startsAt") }}></li>
+                  </ul>
+                  {{ if .Exists "annotations.summary" }}<p class="size-h6">{{ .String "annotations.summary" }}</p>{{ end }}
+                </li>
+                {{ end }}
+                {{ end }}
+              </ul>
+
+          - type: custom-api
             title: Open PRs
             title-url: https://github.com/siggerzz/homelab/pulls
             cache: 15m
@@ -198,6 +227,25 @@ pages:
                 {{ end }}
                 {{ end }}
               </ul>
+
+          - type: custom-api
+            title: Power
+            cache: 1m
+            url: http://prometheus-operated.observability.svc.cluster.local:9090/api/v1/query
+            parameters:
+              query: label_replace(tapo_p110_power_consumption_w / 1000, "k", "now", "", "") or label_replace(tapo_p110_today_energy_wh / 1000, "k", "today", "", "") or label_replace(tapo_p110_month_energy_wh / 1000, "k", "month", "", "")
+            template: |
+              <div class="flex justify-between text-center">
+                {{ range .JSON.Array "data.result" }}{{ if eq (.String "metric.k") "now" }}
+                <div><div class="color-highlight size-h3">{{ printf "%.0f" (.Float "value.1") }} W</div><div class="size-h6">NOW</div></div>
+                {{ end }}{{ end }}
+                {{ range .JSON.Array "data.result" }}{{ if eq (.String "metric.k") "today" }}
+                <div><div class="color-highlight size-h3">{{ printf "%.1f" (.Float "value.1") }} kWh</div><div class="size-h6">TODAY</div></div>
+                {{ end }}{{ end }}
+                {{ range .JSON.Array "data.result" }}{{ if eq (.String "metric.k") "month" }}
+                <div><div class="color-highlight size-h3">{{ printf "%.0f" (.Float "value.1") }} kWh</div><div class="size-h6">MONTH</div></div>
+                {{ end }}{{ end }}
+              </div>
 
           - type: speedtest
 
@@ -269,6 +317,15 @@ pages:
 
       - size: small
         widgets:
+          - type: markets
+            markets:
+              - symbol: VWRP.L
+                name: FTSE All-World (Acc)
+              - symbol: VWRL.L
+                name: FTSE All-World (Dist)
+              - symbol: VFEG.L
+                name: FTSE Emerging Markets (Acc)
+
           - type: custom-api
             title: Next Race
             title-url: https://www.formula1.com/en/racing
