@@ -266,9 +266,6 @@ pages:
               - type: hacker-news
                 limit: 10
                 collapse-after: 5
-              - type: lobsters
-                limit: 10
-                collapse-after: 5
 
       - size: small
         widgets:
