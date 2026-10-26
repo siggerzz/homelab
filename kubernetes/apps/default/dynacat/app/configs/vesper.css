@@ -1,0 +1,31 @@
+:root {
+  --color-background: #101010;
+  --color-widget-background: #161616;
+  --color-widget-content-border: #282828;
+  --color-widget-background-highlight: #1c1c1c;
+  --color-separator: #282828;
+  --color-text-highlight: #ffffff;
+  --color-text-paragraph: #d0d0d0;
+  --color-text-base: #a0a0a0;
+  --color-text-base-muted: #8b8b8b;
+  --color-text-subdue: #6b6b6b;
+}
+
+body,
+input,
+button,
+textarea {
+  font-family: "Berkeley Mono", "JetBrains Mono", ui-monospace, monospace;
+}
+
+.color-primary-if-not-visited:not(:visited) {
+  color: var(--color-text-highlight);
+}
+
+.color-primary-if-not-visited:hover {
+  color: var(--color-primary);
+}
+
+.content-bounds {
+  max-width: 1360px;
+}

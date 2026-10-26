@@ -58,7 +58,7 @@ A fully automated home lab Kubernetes cluster running media services, home autom
 
 **Dashboard**
 
-- Homepage - Unified dashboard with service integrations
+- Dynacat - Browser start page with service status, cluster stats and feeds
 
 ## 🔐 GitOps & Automation
 

@@ -82,14 +82,6 @@ spec:
             conditions:
               - "[STATUS] == 200"
             interval: 5m
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: adguard-home
-          gethomepage.dev/name: AdGuard Home
-          gethomepage.dev/group: Network
-          gethomepage.dev/widget.type: adguard
-          gethomepage.dev/widget.url: http://adguard-app.network.svc.cluster.local:3000
-          gethomepage.dev/widget.username: '{{ "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}" }}'
-          gethomepage.dev/widget.password: '{{ "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}" }}'
         hosts:
           - host: "adguard.${SECRET_DOMAIN}"
             paths:

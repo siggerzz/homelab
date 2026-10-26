@@ -78,10 +78,6 @@ spec:
             conditions:
               - "[STATUS] == 200"
             interval: 5m
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: audiobookshelf
-          gethomepage.dev/name: Audiobookshelf
-          gethomepage.dev/group: Media
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: "audiobookshelf.${SECRET_DOMAIN}"

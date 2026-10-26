@@ -85,13 +85,6 @@ spec:
               - "[STATUS] == 200"
             interval: 5m
           traefik.ingress.kubernetes.io/router.middlewares: security-authentik@kubernetescrd
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: overseerr
-          gethomepage.dev/name: Seerr
-          gethomepage.dev/group: Media
-          gethomepage.dev/widget.type: overseerr
-          gethomepage.dev/widget.url: http://seerr.media.svc.cluster.local:80
-          gethomepage.dev/widget.key: '{{ "{{HOMEPAGE_VAR_SEERR_API_KEY}}" }}'
         hosts:
           - host: "seerr.${SECRET_DOMAIN}"
             paths:

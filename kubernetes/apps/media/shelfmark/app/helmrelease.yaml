@@ -90,10 +90,6 @@ spec:
             conditions:
               - "[STATUS] == 200"
             interval: 5m
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/icon: calibre-web
-          gethomepage.dev/name: Shelfmark
-          gethomepage.dev/group: Media
         hosts:
           - host:  "shelfmark.${SECRET_DOMAIN}"
             paths:

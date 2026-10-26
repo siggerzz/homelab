@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app homepage
+  name: &app dynacat
 spec:
   releaseName: *app
   interval: 30m
@@ -19,45 +19,49 @@ spec:
     keepHistory: false
   values:
     controllers:
-      homepage:
+      dynacat:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/gethomepage/homepage
-              tag: v2.7.0
+              repository: docker.io/panonim/dynacat
+              tag: 3.0.2
             env:
               TZ: Europe/London
-              MY_POD_IP:
-                valueFrom:
-                  fieldRef:
-                    fieldPath: status.podIP
-              HOMEPAGE_ALLOWED_HOSTS:
-                value: "$(MY_POD_IP):3000,homepage.${SECRET_DOMAIN}"
-                dependsOn: MY_POD_IP
+              SECRET_DOMAIN: ${SECRET_DOMAIN}
             envFrom:
               - secretRef:
-                  name: homepage-secret
+                  name: dynacat-secret
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/healthcheck
-                    port: &port 3000
+                    path: /api/healthz
+                    port: &port 8080
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 15m
-                memory: 128Mi
+                cpu: 10m
+                memory: 64Mi
               limits:
-                memory: 512Mi
+                memory: 256Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: *app
@@ -66,7 +70,6 @@ spec:
             port: *port
     ingress:
       app:
-        enabled: true
         className: internal
         annotations:
           gatus.home-operations.com/enabled: "true"
@@ -78,7 +81,7 @@ spec:
               - "[STATUS] == 200"
             interval: 5m
         hosts:
-          - host: &host homepage.${SECRET_DOMAIN}
+          - host: dashboard.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
@@ -88,21 +91,15 @@ spec:
     persistence:
       config:
         type: configMap
-        name: homepage-config
+        name: dynacat-config
         globalMounts:
-          - subPath: bookmarks.yaml
-            path: /app/config/bookmarks.yaml
-          - subPath: docker.yaml
-            path: /app/config/docker.yaml
-          - subPath: kubernetes.yaml
-            path: /app/config/kubernetes.yaml
-          - subPath: services.yaml
-            path: /app/config/services.yaml
-          - subPath: settings.yaml
-            path: /app/config/settings.yaml
-          - subPath: widgets.yaml
-            path: /app/config/widgets.yaml
-    defaultPodOptions:
-      automountServiceAccountToken: true
-    serviceAccount:
-      homepage: {}
+          - path: /app/config/dynacat.yml
+            subPath: dynacat.yml
+            readOnly: true
+          - path: /app/assets/vesper.css
+            subPath: vesper.css
+            readOnly: true
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /app/.cache
