@@ -199,6 +199,8 @@ pages:
                 {{ end }}
               </ul>
 
+          - type: speedtest
+
           - type: dns-stats
             service: adguard
             url: http://adguard-app.network.svc.cluster.local:3000
