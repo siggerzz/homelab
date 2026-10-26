@@ -16,22 +16,7 @@ branding:
 
 pages:
   - name: Home
-    head-widgets:
-      - type: videos
-        title: YouTube
-        limit: 12
-        channels:
-          - UCXuqSBlHAE6Xw-yeJA0Tunw
-          - UCcLYOTz3ct6_lk9iLToxxAw
-          - UC2FZQeaJkpnO6IMkQglvPsg
-          - UCpp3cHR9TWVyXqL1AVw4XkA
-          - UCsBjURrPoezykLs9EqgamOA
-          - UCUyeluBRhGPCW4rPe_UvBZQ
-          - UCyU5wkjgQYGRB0hIHMwm2Sg
-          - UCoebwHSTvwalADTJhps0emA
-          - UCFhXFikryT4aFcLkLw2LBLA
-          - UCTROtIF7bDJc5klVGRzsMQw
-
+    hide-desktop-navigation: true
     columns:
       - size: small
         widgets:
@@ -77,6 +62,57 @@ pages:
             search-engine: google
             autofocus: true
 
+          - type: split-column
+            max-columns: 3
+            widgets:
+              - type: monitor
+                title: Home
+                style: compact
+                cache: 1m
+                sites:
+                  - title: Home Assistant
+                    url: https://hass.${SECRET_DOMAIN}
+                  - title: Zigbee2MQTT
+                    url: https://zigbee.${SECRET_DOMAIN}
+                  - title: Paperless
+                    url: https://paperless.${SECRET_DOMAIN}
+                  - title: Norish
+                    url: https://norish.${SECRET_DOMAIN}
+
+              - type: monitor
+                title: Infrastructure
+                style: compact
+                cache: 1m
+                sites:
+                  - title: Grafana
+                    url: https://grafana.${SECRET_DOMAIN}
+                  - title: Alertmanager
+                    url: https://alertmanager.${SECRET_DOMAIN}
+                  - title: Gatus
+                    url: https://status.siggerzz.io
+                  - title: AdGuard Home
+                    url: https://adguard.${SECRET_DOMAIN}
+                  - title: Authentik
+                    url: https://auth.${SECRET_DOMAIN}
+
+              - type: monitor
+                title: Media
+                style: compact
+                cache: 1m
+                sites:
+                  - title: Jellyfin
+                    url: https://jellyfin.${SECRET_DOMAIN}
+                  - title: Seerr
+                    url: https://seerr.${SECRET_DOMAIN}
+                  - title: Audiobookshelf
+                    url: https://audiobookshelf.${SECRET_DOMAIN}
+                  - title: BookLore
+                    url: https://booklore.${SECRET_DOMAIN}
+                  - title: Sonarr
+                    url: https://sonarr.${SECRET_DOMAIN}
+                  - title: Radarr
+                    url: https://radarr.${SECRET_DOMAIN}
+
           - type: server-stats
             servers:
               - type: node-exporter
@@ -104,128 +140,8 @@ pages:
                     name: Disk
                     hide: false
 
-          - type: monitor
-            title: Services
-            style: compact
-            cache: 1m
-            sites:
-              - title: Home Assistant
-                url: https://hass.${SECRET_DOMAIN}
-                icon: di:home-assistant
-              - title: Zigbee2MQTT
-                url: https://zigbee.${SECRET_DOMAIN}
-                icon: di:zigbee2mqtt
-              - title: Paperless
-                url: https://paperless.${SECRET_DOMAIN}
-                icon: di:paperless-ngx
-              - title: Norish
-                url: https://norish.${SECRET_DOMAIN}
-                icon: mdi:chef-hat
-              - title: Grafana
-                url: https://grafana.${SECRET_DOMAIN}
-                icon: di:grafana
-              - title: Alertmanager
-                url: https://alertmanager.${SECRET_DOMAIN}
-                icon: di:alertmanager
-              - title: Gatus
-                url: https://status.siggerzz.io
-                icon: di:gatus
-              - title: AdGuard Home
-                url: https://adguard.${SECRET_DOMAIN}
-                icon: di:adguard-home
-              - title: Authentik
-                url: https://auth.${SECRET_DOMAIN}
-                icon: di:authentik
-              - title: Jellyfin
-                url: https://jellyfin.${SECRET_DOMAIN}
-                icon: di:jellyfin
-              - title: Seerr
-                url: https://seerr.${SECRET_DOMAIN}
-                icon: di:jellyseerr
-              - title: Audiobookshelf
-                url: https://audiobookshelf.${SECRET_DOMAIN}
-                icon: di:audiobookshelf
-              - title: BookLore
-                url: https://booklore.${SECRET_DOMAIN}
-                icon: di:booklore
-              - title: Sonarr
-                url: https://sonarr.${SECRET_DOMAIN}
-                icon: di:sonarr
-              - title: Radarr
-                url: https://radarr.${SECRET_DOMAIN}
-                icon: di:radarr
-
-          - type: group
-            widgets:
-              - type: rss
-                title: BBC News
-                limit: 10
-                collapse-after: 5
-                feeds:
-                  - url: https://feeds.bbci.co.uk/news/rss.xml
-              - type: rss
-                title: F1
-                limit: 10
-                collapse-after: 5
-                feeds:
-                  - url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
-              - type: rss
-                title: The Verge
-                limit: 10
-                collapse-after: 5
-                feeds:
-                  - url: https://www.theverge.com/rss/index.xml
-              - type: hacker-news
-                limit: 10
-                collapse-after: 5
-              - type: lobsters
-                limit: 10
-                collapse-after: 5
-
       - size: small
         widgets:
-          - type: custom-api
-            title: Next Race
-            title-url: https://www.formula1.com/en/racing
-            cache: 1h
-            url: https://api.jolpi.ca/ergast/f1/current/next.json
-            template: |
-              {{ $r := index (.JSON.Array "MRData.RaceTable.Races") 0 }}
-              <div class="flex flex-column gap-10">
-                <div>
-                  <p class="size-h5">Round {{ $r.String "round" }} · {{ parseTime "DateOnly" ($r.String "date") | formatTime "Mon 2 Jan" }}</p>
-                  <p class="color-highlight size-h3">{{ $r.String "raceName" }}</p>
-                </div>
-                <ul class="list list-gap-4 size-h5">
-                  {{ if $r.Exists "Sprint" }}
-                  <li class="flex justify-between"><span>Sprint</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Sprint.date") ($r.String "Sprint.time")) }}></span></li>
-                  {{ end }}
-                  <li class="flex justify-between"><span>Qualifying</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Qualifying.date") ($r.String "Qualifying.time")) }}></span></li>
-                  <li class="flex justify-between color-primary"><span>Race</span><span {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "date") ($r.String "time")) }}></span></li>
-                </ul>
-                <ul class="size-h6 list-horizontal-text">
-                  <li>{{ $r.String "Circuit.circuitName" }}</li>
-                  <li>{{ $r.String "Circuit.Location.country" }}</li>
-                </ul>
-              </div>
-
-          - type: custom-api
-            title: Drivers Standings
-            cache: 6h
-            url: https://api.jolpi.ca/ergast/f1/current/driverstandings.json
-            template: |
-              <ul class="list collapsible-container" data-collapse-after="5">
-                {{ range $i, $v := .JSON.Array "MRData.StandingsTable.StandingsLists.0.DriverStandings" }}
-                <li class="flex items-center {{ if eq $i 0 }}color-primary{{ else if eq $i 1 }}color-highlight{{ end }}">
-                  <div class="grow min-width-0">
-                    <span>{{ .String "position" }}. {{ .String "Driver.code" }}</span>
-                    <span class="size-h6">({{ .String "Constructors.0.name" }})</span>
-                  </div>
-                  <span class="shrink-0 text-right">{{ .String "points" }}</span>
-                </li>
-                {{ end }}
-              </ul>
-
           - type: custom-api
             title: Open PRs
             title-url: https://github.com/siggerzz/homelab/pulls
@@ -302,3 +218,96 @@ pages:
               - goauthentik/authentik
               - paperless-ngx/paperless-ngx
               - Panonim/dynacat
+
+  - name: Feeds
+    slug: feeds
+    hide-from-navigation: true
+    head-widgets:
+      - type: videos
+        title: YouTube
+        limit: 12
+        channels:
+          - UCXuqSBlHAE6Xw-yeJA0Tunw
+          - UCcLYOTz3ct6_lk9iLToxxAw
+          - UC2FZQeaJkpnO6IMkQglvPsg
+          - UCpp3cHR9TWVyXqL1AVw4XkA
+          - UCsBjURrPoezykLs9EqgamOA
+          - UCUyeluBRhGPCW4rPe_UvBZQ
+          - UCyU5wkjgQYGRB0hIHMwm2Sg
+          - UCoebwHSTvwalADTJhps0emA
+          - UCFhXFikryT4aFcLkLw2LBLA
+          - UCTROtIF7bDJc5klVGRzsMQw
+
+    columns:
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - type: rss
+                title: BBC News
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://feeds.bbci.co.uk/news/rss.xml
+              - type: rss
+                title: F1
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://feeds.bbci.co.uk/sport/formula1/rss.xml
+              - type: rss
+                title: The Verge
+                limit: 10
+                collapse-after: 5
+                feeds:
+                  - url: https://www.theverge.com/rss/index.xml
+              - type: hacker-news
+                limit: 10
+                collapse-after: 5
+              - type: lobsters
+                limit: 10
+                collapse-after: 5
+
+      - size: small
+        widgets:
+          - type: custom-api
+            title: Next Race
+            title-url: https://www.formula1.com/en/racing
+            cache: 1h
+            url: https://api.jolpi.ca/ergast/f1/current/next.json
+            template: |
+              {{ $r := index (.JSON.Array "MRData.RaceTable.Races") 0 }}
+              <div class="flex flex-column gap-10">
+                <div>
+                  <p class="size-h5">Round {{ $r.String "round" }} · {{ parseTime "DateOnly" ($r.String "date") | formatTime "Mon 2 Jan" }}</p>
+                  <p class="color-highlight size-h3">{{ $r.String "raceName" }}</p>
+                </div>
+                <ul class="list list-gap-4 size-h5">
+                  {{ if $r.Exists "Sprint" }}
+                  <li class="flex justify-between"><span>Sprint</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Sprint.date") ($r.String "Sprint.time")) }}></span></li>
+                  {{ end }}
+                  <li class="flex justify-between"><span>Qualifying</span><span class="color-highlight" {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "Qualifying.date") ($r.String "Qualifying.time")) }}></span></li>
+                  <li class="flex justify-between color-primary"><span>Race</span><span {{ parseRelativeTime "rfc3339" (printf "%sT%s" ($r.String "date") ($r.String "time")) }}></span></li>
+                </ul>
+                <ul class="size-h6 list-horizontal-text">
+                  <li>{{ $r.String "Circuit.circuitName" }}</li>
+                  <li>{{ $r.String "Circuit.Location.country" }}</li>
+                </ul>
+              </div>
+
+          - type: custom-api
+            title: Drivers Standings
+            cache: 6h
+            url: https://api.jolpi.ca/ergast/f1/current/driverstandings.json
+            template: |
+              <ul class="list collapsible-container" data-collapse-after="5">
+                {{ range $i, $v := .JSON.Array "MRData.StandingsTable.StandingsLists.0.DriverStandings" }}
+                <li class="flex items-center {{ if eq $i 0 }}color-primary{{ else if eq $i 1 }}color-highlight{{ end }}">
+                  <div class="grow min-width-0">
+                    <span>{{ .String "position" }}. {{ .String "Driver.code" }}</span>
+                    <span class="size-h6">({{ .String "Constructors.0.name" }})</span>
+                  </div>
+                  <span class="shrink-0 text-right">{{ .String "points" }}</span>
+                </li>
+                {{ end }}
+              </ul>
