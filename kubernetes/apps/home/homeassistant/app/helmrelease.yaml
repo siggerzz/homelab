@@ -101,14 +101,12 @@ spec:
               - "[STATUS] == 200"
             interval: 5m
         hosts:
-          - host: home.${SECRET_DOMAIN}
-            paths: &paths
+          - host: hass.${SECRET_DOMAIN}
+            paths:
               - path: /
                 service:
                   identifier: app
                   port: http
-          - host: hass.${SECRET_DOMAIN}
-            paths: *paths
       code-server:
         className: internal
         hosts:
