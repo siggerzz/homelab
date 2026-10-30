@@ -100,7 +100,6 @@ spec:
             conditions:
               - "[STATUS] == 200"
             interval: 5m
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: hass.${SECRET_DOMAIN}
             paths:
