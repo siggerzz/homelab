@@ -20,6 +20,7 @@ spec:
   values:
     controllers:
       home-assistant:
+        strategy: Recreate
         containers:
           app:
             image:
@@ -73,6 +74,8 @@ spec:
               limits:
                 memory: 512Mi
     defaultPodOptions:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
