@@ -146,7 +146,7 @@ pages:
                 cache: 1m
                 sites:
                   - title: Home Assistant
-                    url: https://hass.${SECRET_DOMAIN}
+                    url: https://home.${SECRET_DOMAIN}
                   - title: Zigbee2MQTT
                     url: https://zigbee.${SECRET_DOMAIN}
                   - title: Paperless
