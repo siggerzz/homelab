@@ -37,7 +37,7 @@ spec:
           download:
             image: &image
               repository: mcr.microsoft.com/devcontainers/base
-              tag: 2.2.3-bookworm@sha256:9a5942e64b35c5497c591b9bf177f4a3002d43440bf0a5e1a14fc34667b1a5c1
+              tag: 2.2.5-bookworm@sha256:99f5250dd2d5f8b11046d5662dd94c1e3c1dae56b560c7caad5ceb7edf349046
             env:
               # renovate: datasource=github-releases depName=herdrdev/herdr
               HERDR_VERSION: v0.9.5
