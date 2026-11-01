@@ -148,7 +148,7 @@ spec:
           app:
             image:
               repository: docker.io/norishapp/obscura
-              tag: 0.2.4-norish.2@sha256:5d19f81b45d499073e78bc5716bbcb5b5bcd3158a2a89f68651670d6ace03e83
+              tag: 0.2.5-norish.1@sha256:7bd78a6dbb8329a172f8c4d38cd7a875139b5a7756118579c376c978f612a0a9
             env:
               OBSCURA_CDP_TOKEN:
                 valueFrom:
