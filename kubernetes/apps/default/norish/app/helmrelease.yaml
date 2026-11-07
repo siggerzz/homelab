@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: docker.io/norishapp/norish
-              tag: v0.25.1-beta@sha256:f96ba007c7bdd7b6640f34c2ffbe63a647a2f9e2a291afdf666f895e7f6f168b
+              tag: v0.26.0-beta@sha256:0cc4fe677579fb0e9c6c5d460083373f1b52490a815075cdb700b938facbe49f
             env:
               AUTH_URL: "https://norish.${SECRET_DOMAIN}"
               OBSCURA_ENDPOINT: ws://norish-obscura:9222
