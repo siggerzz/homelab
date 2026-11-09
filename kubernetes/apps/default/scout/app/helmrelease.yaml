@@ -14,7 +14,7 @@ spec:
     # build lands as a value change → rollout. The runner applies migrations on start.
     image:
       repository: ghcr.io/scoutui/scout-web-app
-      tag: main@sha256:d6337fe2b8400a2bff256dfb116c87d673efba0443cff32950b2daec3e5ac845
+      tag: main@sha256:01c07910d6bc0f6554d8426e8c9ded4d554727258aae096c015d39c1381202ce
       pullPolicy: Always
 
     resources:
