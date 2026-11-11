@@ -188,13 +188,14 @@
     },
     {
       description: [
-        'Immich server and machine-learning must run the same version',
+        'Immich server and machine-learning must run the same version; releases can run DB migrations, so never auto-merge',
       ],
       groupName: 'immich',
       matchPackageNames: [
         'ghcr.io/immich-app/immich-server',
         'ghcr.io/immich-app/immich-machine-learning',
       ],
+      automerge: false,
     },
     {
       description: [
