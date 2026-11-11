@@ -62,6 +62,9 @@ spec:
         http:
           tls:
             enabled: true
+        transport:
+          respondingTimeouts:
+            readTimeout: 600s
         forwardedHeaders:
           trustedIPs:
             - "10.69.0.0/16"
