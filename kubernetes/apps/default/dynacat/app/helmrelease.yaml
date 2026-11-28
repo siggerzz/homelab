@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: docker.io/panonim/dynacat
-              tag: 3.0.2
+              tag: 3.0.3
             env:
               TZ: Europe/London
               SECRET_DOMAIN: ${SECRET_DOMAIN}
